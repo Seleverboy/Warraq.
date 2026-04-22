@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>كتاب - مكتبتي الرقمية (النسخة المحسّنة)</title>
+    
+    <!-- المكتبات -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
+    <!-- Chart.js لم نعد نحتاجه لكن نبقيه في حال الرغبة، لكننا حذفنا الرسم -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========== الأنماط الأساسية ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body {
+            background: linear-gradient(145deg, #f7f3eb 0%, #e8dfd3 100%);
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            padding: 16px; color: #2c1810; transition: background 0.3s;
+        }
+        /* تحسين الوضع الليلي بألوان مريحة */
+        body.night-mode {
+            background: linear-gradient(145deg, #1a1512 0%, #231c17 100%);
+            color: #e0d6cc;
+        }
+        .app-container {
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(4px);
+            border-radius: 28px; box-shadow: 0 20px 40px -8px rgba(0,0,0,0.15);
+            width: 100%; max-width: 1440px; height: 92vh;
+            display: flex; flex-direction: column; overflow: hidden;
+            transition: all 0.3s;
+        }
+        body.night-mode .app-container {
+            background: rgba(28,22,18,0.96); box-shadow: 0 20px 40px -8px #00000099;
+            border: 1px solid #3f352e;
+        }
+        /* --- الهيدر --- */
+        .app-header {
+            padding: 14px 24px; background: linear-gradient(98deg, #8B4513 0%, #A0522D 100%);
+            color: white; display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 16px; border-bottom: 2px solid rgba(255,215,170,0.3);
+        }
+        body.night-mode .app-header { background: linear-gradient(98deg, #3a2a1e 0%, #4e3828 100%); border-bottom-color: #6b4f38; }
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        .logo-icon { font-size: 2.2rem; color: #f5deb3; }
+        .logo-text h1 { font-size: 1.8rem; font-weight: 700; }
+        .logo-text .subhead { font-size: 0.8rem; opacity: 0.9; }
+        .header-actions { display: flex; align-items: center; gap: 12px; }
+        .search-wrapper { position: relative; width: 280px; }
+        .search-wrapper i { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: #7a5a3a; }
+        .search-wrapper input {
+            width: 100%; padding: 12px 42px 12px 16px; border: none; border-radius: 40px;
+            background: rgba(255,255,255,0.9); color: #2c1810; font-size: 0.95rem;
+            outline: none; box-shadow: inset 0 2px 5px #0000000d;
+        }
+        body.night-mode .search-wrapper input { background: #2f241c; color: #e0d6cc; }
+        .suggestions-dropdown {
+            position: absolute; top: calc(100% + 6px); right: 0; left: 0; background: white;
+            border-radius: 16px; box-shadow: 0 8px 20px #00000026; max-height: 240px;
+            overflow-y: auto; z-index: 1200; display: none; border: 1px solid #e0d6c8;
+        }
+        body.night-mode .suggestions-dropdown { background: #2c221c; border-color: #5a4a3a; }
+        .suggestion-item { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #eee; }
+        body.night-mode .suggestion-item { border-bottom-color: #3f3228; color: #e0d6cc; }
+        .suggestion-item:hover { background: #f3ede5; }
+        .icon-btn {
+            width: 44px; height: 44px; border-radius: 50%; background: #f5deb3e6;
+            border: none; color: #6b3e1c; font-size: 1.3rem; display: flex;
+            align-items: center; justify-content: center; cursor: pointer;
+            transition: 0.2s; box-shadow: 0 2px 6px #0000001a; border: 1px solid #ffffff4d;
+        }
+        .icon-btn:hover { background: #f5deb3; transform: scale(1.05); }
+        body.night-mode .icon-btn { background: #b3926c; color: #1e1814; border-color: #7a6248; }
+        .avatar {
+            width: 44px; height: 44px; border-radius: 50%; background: #d9b382;
+            display: flex; align-items: center; justify-content: center; font-weight: bold;
+            color: #2c1810; border: 2px solid #fff3e0; cursor: pointer;
+        }
+        body.night-mode .avatar { background: #a77b54; color: #1a1512; border-color: #c0a080; }
+        /* --- التخطيط الرئيسي --- */
+        .main-layout { display: flex; flex: 1; overflow: hidden; }
+        .sidebar-panel {
+            width: 300px; background: #fbf9f5; border-left: 1px solid #e2d8cc;
+            display: flex; flex-direction: column; padding: 20px 14px; gap: 24px;
+            overflow-y: auto; transition: 0.2s;
+        }
+        body.night-mode .sidebar-panel { background: #1f1915; border-left-color: #3f3228; }
+        .stats-card {
+            background: white; border-radius: 18px; padding: 18px 14px;
+            box-shadow: 0 4px 10px #00000005; border: 1px solid #ede3d8;
+        }
+        body.night-mode .stats-card { background: #2a211b; border-color: #4a3c32; }
+        .stats-title { display: flex; align-items: center; gap: 8px; font-weight: 600; color: #5c3e2a; margin-bottom: 16px; }
+        body.night-mode .stats-title { color: #d4b088; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+        .stat-box { background: #f8f3ec; border-radius: 12px; padding: 12px 5px; text-align: center; }
+        body.night-mode .stat-box { background: #352b24; }
+        .stat-number { font-size: 1.5rem; font-weight: 700; color: #6b3e1c; }
+        body.night-mode .stat-number { color: #e8d9c8; }
+        .stat-label { font-size: 0.75rem; color: #7a6248; }
+        body.night-mode .stat-label { color: #b9a590; }
+        /* قسم أحدث الكتب بدل الرسم */
+        .recent-books { margin-top: 10px; }
+        .recent-header { font-weight: 600; margin-bottom: 8px; color: #5c3e2a; }
+        body.night-mode .recent-header { color: #d4b088; }
+        .recent-item {
+            padding: 8px; border-bottom: 1px solid #e2d6ca; display: flex;
+            justify-content: space-between; cursor: pointer;
+        }
+        body.night-mode .recent-item { border-bottom-color: #4a3c32; }
+        .recent-item:hover { background: #ede0d3; }
+        body.night-mode .recent-item:hover { background: #3a2e26; }
+        .categories-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .categories-header h3 { font-size: 0.9rem; text-transform: uppercase; color: #5c3e2a; }
+        .categories-list { list-style: none; }
+        .category-row {
+            padding: 12px 14px; border-radius: 12px; margin-bottom: 5px; display: flex;
+            justify-content: space-between; cursor: pointer; font-weight: 500;
+            border: 1px solid transparent; transition: 0.15s; color: #3e2c1e;
+        }
+        body.night-mode .category-row { color: #ddd0c2; }
+        .category-row:hover { background: #efe6dc; }
+        .category-row.active { background: #8B4513; color: white; }
+        body.night-mode .category-row.active { background: #a57040; color: #f5efe8; }
+        .category-badge { background: #00000014; padding: 2px 10px; border-radius: 20px; font-size: 0.8rem; }
+        .action-buttons { display: flex; flex-direction: column; gap: 10px; }
+        .btn {
+            padding: 14px 18px; border-radius: 40px; border: none; font-weight: 600;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            cursor: pointer; transition: all 0.2s; background: #8B4513; color: white;
+            box-shadow: 0 4px 8px #6b3e1c33;
+        }
+        .btn-secondary { background: #ede0d3; color: #5c3e2a; box-shadow: none; }
+        body.night-mode .btn-secondary { background: #3a2e26; color: #d4b088; }
+        .books-panel {
+            flex: 1; padding: 24px 22px; overflow-y: auto; background: #fffcf9;
+        }
+        body.night-mode .books-panel { background: #18120e; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; }
+        .panel-header h2 { font-size: 1.6rem; color: #4a2e1a; display: flex; align-items: center; gap: 10px; }
+        body.night-mode .panel-header h2 { color: #e8d9c8; }
+        .filter-group { display: flex; gap: 8px; }
+        .filter-btn {
+            padding: 10px 18px; border-radius: 30px; background: white; border: 1px solid #ddd0c2;
+            color: #4a2e1a; font-weight: 500; display: flex; align-items: center; gap: 8px; cursor: pointer;
+        }
+        body.night-mode .filter-btn { background: #2c221c; border-color: #5a4a3a; color: #ddd0c2; }
+        .dropdown-menu {
+            position: absolute; background: white; border: 1px solid #ddd0c2; border-radius: 12px;
+            padding: 8px 0; box-shadow: 0 6px 14px #0000001a; z-index: 100; display: none; min-width: 160px;
+        }
+        body.night-mode .dropdown-menu { background: #2c221c; border-color: #5a4a3a; }
+        .dropdown-item { padding: 10px 18px; cursor: pointer; }
+        .dropdown-item:hover { background: #f3ede5; }
+        .books-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 22px; }
+        .book-card {
+            background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 6px 14px #0000000a;
+            border: 1px solid #eaded2; transition: all 0.25s; display: flex; flex-direction: column;
+            cursor: pointer; position: relative;
+        }
+        body.night-mode .book-card { background: #231c17; border-color: #4a3c32; }
+        .book-card.reading-highlight { border-right: 6px solid #2ecc71; }
+        .book-card:hover { transform: translateY(-6px); box-shadow: 0 16px 28px -8px #50281433; }
+        .book-cover {
+            height: 170px; background: linear-gradient(145deg, #e9daca, #dccbb8);
+            display: flex; align-items: center; justify-content: center; color: #6b3e1c; font-size: 3.2rem;
+        }
+        body.night-mode .book-cover { background: linear-gradient(145deg, #3a2e26, #2c221c); color: #b3926c; }
+        .book-badge { position: absolute; top: 14px; left: 14px; background: #8B4513; color: white; padding: 4px 12px; border-radius: 30px; font-size: 0.75rem; }
+        .book-details { padding: 18px 16px; flex: 1; }
+        .book-title { font-weight: 700; font-size: 1.15rem; margin-bottom: 6px; }
+        .book-author { color: #7a6248; font-size: 0.9rem; margin-bottom: 6px; }
+        body.night-mode .book-author { color: #b9a590; }
+        .rating-stars { color: #f1c40f; margin: 6px 0; }
+        .progress-bar-container { height: 5px; background: #e2d6ca; border-radius: 6px; margin: 12px 0; }
+        .progress-fill { height: 100%; background: #8B4513; border-radius: 6px; width: 0%; }
+        .book-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+        .book-actions i { margin: 0 5px; color: #7a6248; font-size: 1.1rem; cursor: pointer; }
+        .book-actions i:hover { color: #8B4513; }
+        /* --- المودالات --- */
+        .modal-overlay {
+            position: fixed; inset: 0; background: #00000099; backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center; z-index: 2000;
+            opacity: 0; visibility: hidden; transition: 0.2s;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-card {
+            background: white; border-radius: 24px; width: 600px; max-width: 94%;
+            max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 40px -10px black;
+        }
+        body.night-mode .modal-card { background: #2a211b; color: #e8ddcf; }
+        .modal-header { padding: 22px 28px; background: #8B4513; color: white; font-size: 1.4rem; }
+        .modal-body { padding: 28px; }
+        .form-row { margin-bottom: 22px; }
+        .form-row label { font-weight: 600; display: block; margin-bottom: 8px; color: #4a2e1a; }
+        body.night-mode .form-row label { color: #d4b088; }
+        .form-control {
+            width: 100%; padding: 14px 16px; border: 1.5px solid #ddd0c2;
+            border-radius: 16px; font-size: 1rem; background: white;
+        }
+        body.night-mode .form-control { background: #352b24; border-color: #5a4a3a; color: #f0e6dc; }
+        .category-options { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+        .cat-option {
+            padding: 8px 16px; border: 1.5px solid #ddd0c2; border-radius: 30px; cursor: pointer;
+        }
+        .cat-option.selected { background: #8B4513; color: white; border-color: #8B4513; }
+        .modal-footer { padding: 20px 28px; border-top: 1px solid #e2d6ca; display: flex; justify-content: flex-end; gap: 14px; }
+        /* --- صفحة القراءة --- */
+        .reader-overlay {
+            position: fixed; inset: 0; background: #f8f2ea; z-index: 3000;
+            display: none; flex-direction: column;
+        }
+        body.night-mode .reader-overlay { background: #140f0c; }
+        .reader-overlay.active { display: flex; }
+        .reader-progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: #2ecc71; width: 0%; z-index: 3100; }
+        .reader-header { padding: 14px 28px; background: #8B4513; color: white; display: flex; align-items: center; gap: 20px; }
+        .reader-controls { display: flex; gap: 8px; margin-right: auto; }
+        .reader-controls select {
+            padding: 6px 12px; border-radius: 30px; background: #f5deb3; color: #4a2e1a;
+            border: 1px solid #ffffff4d; font-weight: 500; cursor: pointer;
+        }
+        body.night-mode .reader-controls select { background: #3a2e26; color: #e8ddcf; border-color: #5a4a3a; }
+        .reader-content { flex: 1; padding: 32px; overflow-y: auto; max-width: 900px; margin: 0 auto; width: 100%; }
+        .reader-title { font-size: 2.4rem; margin-bottom: 12px; }
+        .reader-text { font-size: 1.25rem; line-height: 1.9; text-align: justify; }
+        /* --- محرر الصفحات --- */
+        .pages-editor-modal .modal-card { width: 800px; }
+        .pages-container { display: flex; flex-direction: column; gap: 20px; }
+        .page-tabs { display: flex; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid #ddd0c2; padding-bottom: 10px; }
+        .page-tab {
+            padding: 8px 18px; border-radius: 30px; background: #ede0d3; cursor: pointer;
+            border: 1px solid transparent;
+        }
+        body.night-mode .page-tab { background: #3a2e26; color: #e8ddcf; }
+        .page-tab.active { background: #8B4513; color: white; }
+        .page-editor textarea { width: 100%; min-height: 250px; padding: 16px; border-radius: 16px; border: 1.5px solid #ddd0c2; font-size: 1rem; }
+        .page-navigation { display: flex; justify-content: space-between; margin-top: 10px; }
+        .write-content-btn {
+            background: #f5deb3; color: #4a2e1a; border: 1.5px dashed #8B4513;
+            padding: 14px; border-radius: 16px; width: 100%; font-weight: bold;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            cursor: pointer;
+        }
+        body.night-mode .write-content-btn { background: #3a2e26; color: #e8ddcf; border-color: #b07c50; }
+        .audio-file-row { display: flex; align-items: center; gap: 10px; }
+        .delete-audio-btn { background: none; border: none; color: #c0392b; cursor: pointer; font-size: 1.2rem; }
+        @media (max-width: 700px) {
+            .main-layout { flex-direction: column; }
+            .sidebar-panel { width: 100%; border-left: none; }
+            .books-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header class="app-header">
+        <div class="logo-area">
+            <i class="fas fa-book-open logo-icon"></i>
+            <div class="logo-text">
+                <h1>كتاب</h1>
+                <div class="subhead">مكتبتي الرقمية</div>
+            </div>
+        </div>
+        <div class="header-actions">
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="ابحث عن كتاب أو مؤلف..." autocomplete="off">
+                <div class="suggestions-dropdown" id="searchSuggestions"></div>
+            </div>
+            <button class="icon-btn" id="nightModeBtn" title="الوضع الليلي"><i class="fas fa-moon"></i></button>
+            <button class="icon-btn" id="editModeBtn" title="وضع التعديل السريع"><i class="fas fa-pen-to-square"></i></button>
+            <button class="icon-btn" id="addBookBtn" title="إضافة كتاب"><i class="fas fa-plus"></i></button>
+            <div class="avatar" id="userAvatar">أ</div>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar-panel">
+            <div class="stats-card">
+                <div class="stats-title"><i class="fas fa-chart-pie"></i> إحصائيات</div>
+                <div class="stats-grid">
+                    <div class="stat-box"><div class="stat-number" id="totalBooks">0</div><div class="stat-label">كتاب</div></div>
+                    <div class="stat-box"><div class="stat-number" id="totalAuthors">0</div><div class="stat-label">مؤلف</div></div>
+                    <div class="stat-box"><div class="stat-number" id="readBooks">0</div><div class="stat-label">مقروء</div></div>
+                    <div class="stat-box"><div class="stat-number" id="readingHours">0</div><div class="stat-label">ساعة</div></div>
+                </div>
+                <!-- استبدال الرسم البياني بقسم أحدث الكتب -->
+                <div class="recent-books">
+                    <div class="recent-header"><i class="fas fa-clock"></i> أحدث الكتب</div>
+                    <div id="recentBooksList"></div>
+                </div>
+            </div>
+            <div>
+                <div class="categories-header">
+                    <h3><i class="fas fa-tags"></i> التصنيفات</h3>
+                    <button class="icon-btn" id="addCategorySidebarBtn" style="width:32px;height:32px;"><i class="fas fa-plus"></i></button>
+                </div>
+                <ul class="categories-list" id="categoryList"></ul>
+            </div>
+            <div class="action-buttons">
+                <!-- حذف زر استيراد تجريبي -->
+                <button class="btn btn-secondary" id="exportDataBtn"><i class="fas fa-download"></i> تصدير JSON</button>
+                <button class="btn btn-secondary" id="importDataBtn"><i class="fas fa-upload"></i> استيراد JSON</button>
+                <input type="file" id="importFileInput" accept=".json" style="display:none">
+            </div>
+        </aside>
+
+        <main class="books-panel">
+            <div class="panel-header">
+                <h2><i class="fas fa-books"></i> جميع الكتب</h2>
+                <div class="filter-group">
+                    <div style="position:relative;">
+                        <button class="filter-btn" id="sortBtn"><i class="fas fa-arrow-down-wide-short"></i> ترتيب</button>
+                        <div class="dropdown-menu" id="sortDropdown">
+                            <div class="dropdown-item" data-sort="title">العنوان (أ-ي)</div>
+                            <div class="dropdown-item" data-sort="title-desc">العنوان (ي-أ)</div>
+                            <div class="dropdown-item" data-sort="author">المؤلف (أ-ي)</div>
+                            <div class="dropdown-item" data-sort="year">السنة (تصاعدي)</div>
+                            <div class="dropdown-item" data-sort="year-desc">السنة (تنازلي)</div>
+                        </div>
+                    </div>
+                    <div style="position:relative;">
+                        <button class="filter-btn" id="filterBtn"><i class="fas fa-filter"></i> تصفية</button>
+                        <div class="dropdown-menu" id="filterDropdown">
+                            <div class="dropdown-item" data-filter="all">الكل</div>
+                            <div class="dropdown-item" data-filter="favorite">المفضلة</div>
+                            <div class="dropdown-item" data-filter="reading">قيد القراءة</div>
+                            <div class="dropdown-item" data-filter="read">مقروء</div>
+                        </div>
+                    </div>
+                    <button class="filter-btn" id="deleteAllBtn"><i class="fas fa-trash"></i> حذف الكل</button>
+                </div>
+            </div>
+            <div class="books-grid" id="booksGrid"></div>
+        </main>
+    </div>
+</div>
+
+<!-- مودال إضافة/تعديل كتاب -->
+<div class="modal-overlay" id="bookModal">
+    <div class="modal-card">
+        <div class="modal-header" id="modalTitle"><i class="fas fa-plus-circle"></i> إضافة كتاب</div>
+        <div class="modal-body">
+            <input type="hidden" id="editingBookId">
+            <div class="form-row"><label>العنوان *</label><input class="form-control" id="bookTitle" placeholder="أدخل العنوان"></div>
+            <div class="form-row"><label>المؤلف</label><input class="form-control" id="bookAuthor" placeholder="اسم المؤلف (اختياري)"></div>
+            <div class="form-row"><label>عدد الصفحات</label><input class="form-control" type="number" id="bookPages" min="1" value="1"></div>
+            <div class="form-row"><label>التصنيف</label>
+                <div class="category-options" id="categoryOptions"></div>
+                <input class="form-control" id="customCategory" placeholder="أو اكتب تصنيف جديد">
+            </div>
+            <div class="form-row"><label>نص الكتاب *</label>
+                <div id="contentPreview" style="margin-bottom:8px; font-size:0.9rem; color: #7a6248;"></div>
+                <button type="button" class="write-content-btn" id="openPagesEditorBtn"><i class="fas fa-pen-fancy"></i> كتابة النص (محرر الصفحات)</button>
+                <input type="hidden" id="bookContentHidden">
+            </div>
+            <div class="form-row"><label>ملاحظات</label><textarea class="form-control" id="bookNotes" rows="2"></textarea></div>
+            <div class="form-row"><label>تقييم</label><div class="rating-stars" id="ratingStarsInput"></div></div>
+            <div class="form-row"><label>ملف صوتي (MP3)</label>
+                <div class="audio-file-row">
+                    <input type="file" id="audioFileInput" accept="audio/mp3" style="flex:1;">
+                    <button type="button" id="deleteAudioBtn" class="delete-audio-btn" title="حذف الملف الصوتي" style="display:none;"><i class="fas fa-trash-alt"></i></button>
+                </div>
+                <audio id="audioPreview" controls style="display:none; width:100%; margin-top:8px;"></audio>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelAddBtn">إلغاء</button>
+            <button class="btn" id="saveBookBtn">حفظ</button>
+        </div>
+    </div>
+</div>
+
+<!-- مودال محرر الصفحات -->
+<div class="modal-overlay pages-editor-modal" id="pagesEditorModal">
+    <div class="modal-card" style="width:800px;">
+        <div class="modal-header"><i class="fas fa-file-alt"></i> كتابة النص (صفحات)</div>
+        <div class="modal-body">
+            <div class="pages-container">
+                <div class="page-tabs" id="pageTabs"></div>
+                <div class="page-editor">
+                    <textarea id="currentPageEditor" placeholder="اكتب محتوى الصفحة هنا..."></textarea>
+                </div>
+                <div class="page-navigation">
+                    <button class="btn btn-secondary" id="prevPageBtn"><i class="fas fa-chevron-right"></i> السابقة</button>
+                    <span id="pageIndicator">صفحة 1 من 1</span>
+                    <button class="btn btn-secondary" id="nextPageBtn">التالية <i class="fas fa-chevron-left"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelPagesBtn">إلغاء</button>
+            <button class="btn" id="donePagesBtn">أكمل وحفظ</button>
+        </div>
+    </div>
+</div>
+
+<!-- صفحة القراءة -->
+<div class="reader-overlay" id="readingPage">
+    <div class="reader-progress-bar" id="readingProgressBar"></div>
+    <div class="reader-header">
+        <button class="btn btn-secondary" id="backToLibraryBtn"><i class="fas fa-arrow-right"></i> العودة</button>
+        <h2 id="readingPageTitle"></h2>
+        <div class="reader-controls">
+            <button class="icon-btn" id="focusModeBtn"><i class="fas fa-eye"></i></button>
+            <button class="icon-btn" id="increaseFontBtn">A+</button>
+            <button class="icon-btn" id="decreaseFontBtn">A-</button>
+            <select id="fontFamilySelect">
+                <option value="Cairo">افتراضي</option>
+                <option value="'Traditional Arabic', serif">نسخ</option>
+                <option value="Arial, sans-serif">حديث</option>
+            </select>
+            <!-- أزلنا زر الاقتباسات لأنه ليس له فائدة -->
+            <button class="icon-btn" id="similarBooksBtn"><i class="fas fa-book"></i></button>
+        </div>
+    </div>
+    <div class="reader-content" id="readerContent">
+        <h1 class="reader-title" id="readingTitle"></h1>
+        <div id="readingAuthor" style="margin-bottom:20px;"></div>
+        <div id="audioPlayerContainer"></div>
+        <div id="readingPagesContainer">
+            <div id="pageDisplayArea" class="reader-text"></div>
+            <div style="display:flex; justify-content:center; gap:20px; margin-top:30px;">
+                <button class="btn btn-secondary" id="readerPrevPage"><i class="fas fa-chevron-right"></i> السابقة</button>
+                <span id="readerPageIndicator">صفحة 1</span>
+                <button class="btn btn-secondary" id="readerNextPage">التالية <i class="fas fa-chevron-left"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- مودال تأكيد الحذف -->
+<div class="modal-overlay" id="confirmDeleteModal"><div class="modal-card" style="width:400px;"><div class="modal-header">تأكيد الحذف</div><div class="modal-body"><p id="deleteMessage"></p></div><div class="modal-footer"><button class="btn btn-secondary" id="cancelDeleteBtn">إلغاء</button><button class="btn" id="confirmDeleteBtn" style="background:#c0392b;">حذف</button></div></div></div>
+
+<!-- مودال إضافة تصنيف -->
+<div class="modal-overlay" id="addCategoryModal"><div class="modal-card" style="width:400px;"><div class="modal-header">إضافة تصنيف</div><div class="modal-body"><input class="form-control" id="newCategoryName" placeholder="اسم التصنيف"></div><div class="modal-footer"><button class="btn btn-secondary" id="cancelAddCategoryBtn">إلغاء</button><button class="btn" id="saveNewCategoryBtn">حفظ</button></div></div></div>
+
+<script>
+    (function(){
+        "use strict";
+        const STORAGE_KEY = 'kitab_enhanced_v3';
+        function saveLibrary(data) {
+            try { localStorage.setItem(STORAGE_KEY, LZString.compressToUTF16(JSON.stringify(data))); return true; }
+            catch(e) { alert('فشل الحفظ'); return false; }
+        }
+        function loadLibrary() {
+            const c = localStorage.getItem(STORAGE_KEY);
+            if (!c) return null;
+            try { return JSON.parse(LZString.decompressFromUTF16(c)); } catch(e) { return null; }
+        }
+        const defaultBooks = [
+            { id: 1, title: "مقدمة ابن خلدون", author: "ابن خلدون", year: "1377", pages: 800, category: "تاريخي", description: "كتاب العبر", content: '["الفصل الأول: في أن الاجتماع الإنساني ضروري..."]', progress: 65, language: "عربي", isFavorite: true, isReading: true, rating: 5, notes: "", lastReadPosition: 0, audioFile: null, quotes: [] },
+            { id: 2, title: "حكايات شعبية", author: "", year: "2024", pages: 120, category: "مغامرة", description: "قصص", content: '["في سالف العصر والأوان..."]', progress: 20, rating: 4, audioFile: null, quotes: [] }
+        ];
+
+        class Library {
+            constructor() {
+                const saved = loadLibrary();
+                this.books = saved?.books || defaultBooks;
+                this.customCategories = saved?.customCategories || [];
+                this.currentCategory = 'all';
+                this.currentSort = 'title';
+                this.currentFilter = 'all';
+                this.searchTerm = '';
+                this.nightMode = localStorage.getItem('nightMode') === 'true';
+                this.applyNightMode();
+                this.editMode = false;
+            }
+            applyNightMode() { document.body.classList.toggle('night-mode', this.nightMode); }
+            toggleNightMode() { this.nightMode = !this.nightMode; localStorage.setItem('nightMode', this.nightMode); this.applyNightMode(); }
+            save() { return saveLibrary({ books: this.books, customCategories: this.customCategories }); }
+            add(book) { book.id = Date.now(); book.dateAdded = new Date().toISOString().split('T')[0]; this.books.unshift(book); return this.save(); }
+            update(id, updates) { const idx = this.books.findIndex(b=>b.id==id); if(idx!==-1) { this.books[idx] = {...this.books[idx], ...updates}; return this.save(); } return false; }
+            delete(id) { this.books = this.books.filter(b=>b.id!=id); return this.save(); }
+            getFiltered() {
+                let filtered = this.books.filter(b => {
+                    if (this.currentCategory !== 'all' && b.category !== this.currentCategory) return false;
+                    if (this.currentFilter === 'favorite' && !b.isFavorite) return false;
+                    if (this.currentFilter === 'reading' && !(b.progress>0 && b.progress<100)) return false;
+                    if (this.currentFilter === 'read' && b.progress<100) return false;
+                    if (this.searchTerm) {
+                        const t = this.searchTerm.toLowerCase();
+                        return (b.title||'').toLowerCase().includes(t) || (b.author||'').toLowerCase().includes(t) || (b.category||'').toLowerCase().includes(t);
+                    }
+                    return true;
+                });
+                filtered.sort((a,b) => {
+                    if (this.currentSort === 'title') return a.title.localeCompare(b.title, 'ar');
+                    if (this.currentSort === 'title-desc') return b.title.localeCompare(a.title, 'ar');
+                    if (this.currentSort === 'author') return (a.author||'').localeCompare(b.author||'', 'ar');
+                    if (this.currentSort === 'year') return (a.year||0) - (b.year||0);
+                    if (this.currentSort === 'year-desc') return (b.year||0) - (a.year||0);
+                    return 0;
+                });
+                return filtered;
+            }
+            getStats() {
+                const totalBooks = this.books.length;
+                const authorsSet = new Set(this.books.map(b=>b.author).filter(a=>a && a.trim()));
+                const readBooks = this.books.filter(b=>b.progress>=100).length;
+                let totalMinutes = 0;
+                this.books.forEach(b => {
+                    let pages = b.pages || 1;
+                    if (typeof b.content === 'string' && b.content.startsWith('[')) {
+                        try { const arr = JSON.parse(b.content); pages = arr.length; } catch(e) {}
+                    }
+                    totalMinutes += pages * 2; // افتراض دقيقتين للصفحة
+                });
+                const readingHours = Math.floor(totalMinutes / 60);
+                return { totalBooks, uniqueAuthors: authorsSet.size, readBooks, readingHours };
+            }
+            getCategories() {
+                const base = ['رومانسي','خيال علمي','مغامرة','تاريخي','غموض','رعب','فانتازيا','دراما','شعر','سيرة ذاتية','أطفال','تنمية بشرية'];
+                return ['all', ...new Set([...base, ...this.customCategories, ...this.books.map(b=>b.category).filter(Boolean)])];
+            }
+            addCustomCategory(name) {
+                if (!this.customCategories.includes(name)) {
+                    this.customCategories.push(name);
+                    this.save();
+                }
+            }
+            getRecentBooks(limit=3) {
+                return [...this.books].sort((a,b) => (b.dateAdded||'').localeCompare(a.dateAdded||'')).slice(0, limit);
+            }
+        }
+        const lib = new Library();
+
+        // DOM elements
+        const booksGrid = document.getElementById('booksGrid');
+        const bookModal = document.getElementById('bookModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const editingId = document.getElementById('editingBookId');
+        const bookTitleInp = document.getElementById('bookTitle');
+        const bookAuthorInp = document.getElementById('bookAuthor');
+        const bookPagesInp = document.getElementById('bookPages');
+        const bookNotesInp = document.getElementById('bookNotes');
+        const customCategoryInp = document.getElementById('customCategory');
+        const categoryOptionsDiv = document.getElementById('categoryOptions');
+        const ratingStarsDiv = document.getElementById('ratingStarsInput');
+        const audioFileInput = document.getElementById('audioFileInput');
+        const audioPreview = document.getElementById('audioPreview');
+        const deleteAudioBtn = document.getElementById('deleteAudioBtn');
+        const saveBookBtn = document.getElementById('saveBookBtn');
+        const cancelAddBtn = document.getElementById('cancelAddBtn');
+        const searchInput = document.getElementById('searchInput');
+        const searchSuggestions = document.getElementById('searchSuggestions');
+        const readingPage = document.getElementById('readingPage');
+        const readingTitle = document.getElementById('readingTitle');
+        const readingAuthor = document.getElementById('readingAuthor');
+        const readingPageTitle = document.getElementById('readingPageTitle');
+        const backToLibraryBtn = document.getElementById('backToLibraryBtn');
+        const nightModeBtn = document.getElementById('nightModeBtn');
+        const nightIcon = nightModeBtn.querySelector('i');
+        const exportDataBtn = document.getElementById('exportDataBtn');
+        const importDataBtn = document.getElementById('importDataBtn');
+        const importFileInput = document.getElementById('importFileInput');
+        const sortBtn = document.getElementById('sortBtn');
+        const sortDropdown = document.getElementById('sortDropdown');
+        const filterBtn = document.getElementById('filterBtn');
+        const filterDropdown = document.getElementById('filterDropdown');
+        const deleteAllBtn = document.getElementById('deleteAllBtn');
+        const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        const deleteMessage = document.getElementById('deleteMessage');
+        const addCategorySidebarBtn = document.getElementById('addCategorySidebarBtn');
+        const addCategoryModal = document.getElementById('addCategoryModal');
+        const newCategoryName = document.getElementById('newCategoryName');
+        const cancelAddCategoryBtn = document.getElementById('cancelAddCategoryBtn');
+        const saveNewCategoryBtn = document.getElementById('saveNewCategoryBtn');
+        const readingProgressBar = document.getElementById('readingProgressBar');
+        const focusModeBtn = document.getElementById('focusModeBtn');
+        const increaseFontBtn = document.getElementById('increaseFontBtn');
+        const decreaseFontBtn = document.getElementById('decreaseFontBtn');
+        const fontFamilySelect = document.getElementById('fontFamilySelect');
+        const similarBooksBtn = document.getElementById('similarBooksBtn');
+        const editModeBtn = document.getElementById('editModeBtn');
+        const userAvatar = document.getElementById('userAvatar');
+        const openPagesEditorBtn = document.getElementById('openPagesEditorBtn');
+        const pagesEditorModal = document.getElementById('pagesEditorModal');
+        const pageTabs = document.getElementById('pageTabs');
+        const currentPageEditor = document.getElementById('currentPageEditor');
+        const prevPageBtn = document.getElementById('prevPageBtn');
+        const nextPageBtn = document.getElementById('nextPageBtn');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const cancelPagesBtn = document.getElementById('cancelPagesBtn');
+        const donePagesBtn = document.getElementById('donePagesBtn');
+        const bookContentHidden = document.getElementById('bookContentHidden');
+        const contentPreview = document.getElementById('contentPreview');
+        const readerPageDisplay = document.getElementById('pageDisplayArea');
+        const readerPrevPage = document.getElementById('readerPrevPage');
+        const readerNextPage = document.getElementById('readerNextPage');
+        const readerPageIndicator = document.getElementById('readerPageIndicator');
+        const recentBooksList = document.getElementById('recentBooksList');
+
+        let currentRating = 0;
+        let currentBookId = null;
+        let audioDataURL = null;
+        let pagesContent = [];
+        let currentPageIndex = 0;
+        let totalPages = 1;
+        let readerPages = [];
+        let readerCurrentPage = 0;
+
+        function renderCategories() {
+            const cats = lib.getCategories();
+            const list = document.getElementById('categoryList');
+            list.innerHTML = '';
+            cats.forEach(cat => {
+                const li = document.createElement('li');
+                li.className = `category-row ${lib.currentCategory===cat?'active':''}`;
+                li.innerHTML = `<span>${cat==='all'?'جميع الكتب':cat}</span><span class="category-badge">${lib.books.filter(b=>cat==='all'?true:b.category===cat).length}</span>`;
+                li.onclick = () => { lib.currentCategory = cat; renderCategories(); renderBooks(); };
+                list.appendChild(li);
+            });
+            const baseCats = ['رومانسي','خيال علمي','مغامرة','تاريخي','غموض','رعب','فانتازيا','دراما','شعر','سيرة ذاتية','أطفال','تنمية بشرية'];
+            categoryOptionsDiv.innerHTML = '';
+            [...baseCats, ...lib.customCategories].forEach(c => {
+                const span = document.createElement('span');
+                span.className = 'cat-option';
+                span.textContent = c;
+                span.dataset.cat = c;
+                span.onclick = () => { document.querySelectorAll('.cat-option').forEach(o=>o.classList.remove('selected')); span.classList.add('selected'); };
+                categoryOptionsDiv.appendChild(span);
+            });
+        }
+
+        function renderBooks() {
+            const filtered = lib.getFiltered();
+            booksGrid.innerHTML = '';
+            if (filtered.length===0) { booksGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;">لا توجد كتب</div>'; return; }
+            filtered.forEach(book => {
+                const card = document.createElement('div');
+                card.className = `book-card ${book.progress>0 && book.progress<100 ? 'reading-highlight' : ''}`;
+                card.dataset.id = book.id;
+                card.innerHTML = `
+                    <div class="book-cover"><i class="fas fa-book"></i><span class="book-badge">${book.language||'عربي'}</span></div>
+                    <div class="book-details">
+                        <div class="book-title">${DOMPurify.sanitize(book.title)}</div>
+                        <div class="book-author">${book.author || 'غير معروف'}</div>
+                        <div class="rating-stars">${'★'.repeat(book.rating||0)}${'☆'.repeat(5-(book.rating||0))}</div>
+                        <div class="progress-bar-container"><div class="progress-fill" style="width:${book.progress||0}%"></div></div>
+                        <div class="book-meta">
+                            <span><i class="fas fa-tag"></i> ${book.category}</span>
+                            <div class="book-actions">
+                                <i class="fas fa-heart" data-action="fav" style="color:${book.isFavorite?'#e74c3c':''}"></i>
+                                ${lib.editMode ? '<i class="fas fa-edit" data-action="edit"></i>' : ''}
+                                <i class="fas fa-trash" data-action="delete"></i>
+                                <i class="fas fa-book-open" data-action="read"></i>
+                                <i class="fas fa-download" data-action="export"></i>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                card.querySelector('[data-action="fav"]').onclick = e => { e.stopPropagation(); lib.update(book.id, {isFavorite: !book.isFavorite}); renderBooks(); };
+                if (lib.editMode) card.querySelector('[data-action="edit"]').onclick = e => { e.stopPropagation(); openEditModal(book); };
+                card.querySelector('[data-action="delete"]').onclick = e => { e.stopPropagation(); openDeleteModal(book.id); };
+                card.querySelector('[data-action="read"]').onclick = e => { e.stopPropagation(); openReader(book.id); };
+                card.querySelector('[data-action="export"]').onclick = e => { e.stopPropagation(); exportBook(book); };
+                card.onclick = () => openReader(book.id);
+                booksGrid.appendChild(card);
+            });
+        }
+
+        function updateStatsUI() {
+            const s = lib.getStats();
+            document.getElementById('totalBooks').textContent = s.totalBooks;
+            document.getElementById('totalAuthors').textContent = s.uniqueAuthors;
+            document.getElementById('readBooks').textContent = s.readBooks;
+            document.getElementById('readingHours').textContent = s.readingHours;
+            renderRecentBooks();
+        }
+
+        function renderRecentBooks() {
+            const recent = lib.getRecentBooks(3);
+            recentBooksList.innerHTML = recent.map(b => 
+                `<div class="recent-item" onclick="document.getElementById('searchInput').value='${b.title}'; document.getElementById('searchInput').dispatchEvent(new Event('input'));">
+                    <span>${DOMPurify.sanitize(b.title)}</span>
+                    <span>${b.author || ''}</span>
+                </div>`
+            ).join('');
+        }
+
+        function openEditModal(book) {
+            editingId.value = book.id;
+            modalTitle.innerHTML = '<i class="fas fa-edit"></i> تعديل كتاب';
+            bookTitleInp.value = book.title;
+            bookAuthorInp.value = book.author || '';
+            bookPagesInp.value = book.pages || 1;
+            bookNotesInp.value = book.notes || '';
+            currentRating = book.rating || 0;
+            updateRatingStars();
+            document.querySelectorAll('.cat-option').forEach(o => { o.classList.remove('selected'); if (o.dataset.cat === book.category) o.classList.add('selected'); });
+            audioDataURL = book.audioFile;
+            if (audioDataURL) {
+                audioPreview.src = audioDataURL;
+                audioPreview.style.display = 'block';
+                deleteAudioBtn.style.display = 'inline-block';
+            } else {
+                audioPreview.style.display = 'none';
+                deleteAudioBtn.style.display = 'none';
+            }
+            if (book.content) {
+                try { pagesContent = JSON.parse(book.content); } catch { pagesContent = [book.content]; }
+            } else pagesContent = [''];
+            totalPages = pagesContent.length;
+            updateContentPreview();
+            bookModal.classList.add('active');
+        }
+
+        function updateRatingStars() {
+            ratingStarsDiv.innerHTML = '';
+            for (let i=1; i<=5; i++) {
+                const star = document.createElement('i');
+                star.className = i <= currentRating ? 'fas fa-star' : 'far fa-star';
+                star.dataset.rating = i;
+                star.onclick = () => { currentRating = i; updateRatingStars(); };
+                ratingStarsDiv.appendChild(star);
+            }
+        }
+
+        function updateContentPreview() {
+            if (pagesContent.length && pagesContent.some(p=>p.trim())) {
+                contentPreview.textContent = `تم كتابة ${pagesContent.length} صفحة.`;
+            } else contentPreview.textContent = 'لم يتم إدخال نص بعد.';
+        }
+
+        function openPagesEditor() {
+            const numPages = parseInt(bookPagesInp.value) || 1;
+            totalPages = numPages;
+            if (pagesContent.length !== totalPages) {
+                const newContent = [];
+                for (let i=0; i<totalPages; i++) newContent[i] = pagesContent[i] || '';
+                pagesContent = newContent;
+            }
+            currentPageIndex = 0;
+            renderPageTabs();
+            loadPageEditor(0);
+            pagesEditorModal.classList.add('active');
+        }
+
+        function renderPageTabs() {
+            pageTabs.innerHTML = '';
+            for (let i=0; i<totalPages; i++) {
+                const tab = document.createElement('span');
+                tab.className = `page-tab ${i===currentPageIndex?'active':''}`;
+                tab.textContent = `صفحة ${i+1}`;
+                tab.onclick = () => { saveCurrentPage(); currentPageIndex = i; loadPageEditor(i); renderPageTabs(); };
+                pageTabs.appendChild(tab);
+            }
+            pageIndicator.textContent = `صفحة ${currentPageIndex+1} من ${totalPages}`;
+        }
+
+        function loadPageEditor(index) { currentPageEditor.value = pagesContent[index] || ''; }
+        function saveCurrentPage() { pagesContent[currentPageIndex] = currentPageEditor.value; }
+        function donePagesEditor() { saveCurrentPage(); bookContentHidden.value = JSON.stringify(pagesContent); updateContentPreview(); pagesEditorModal.classList.remove('active'); }
+
+        function openReader(bookId) {
+            const book = lib.books.find(b=>b.id==bookId);
+            if (!book) return;
+            currentBookId = bookId;
+            readingPageTitle.textContent = book.title;
+            readingTitle.textContent = book.title;
+            readingAuthor.innerHTML = `<i class="fas fa-user"></i> ${book.author || 'غير معروف'}`;
+            document.getElementById('audioPlayerContainer').innerHTML = book.audioFile ? `<audio controls src="${book.audioFile}"></audio>` : '';
+            try { readerPages = JSON.parse(book.content); } catch { readerPages = [book.content]; }
+            readerCurrentPage = 0;
+            displayReaderPage(0);
+            readingPage.classList.add('active');
+            document.querySelector('.app-container').style.display = 'none';
+        }
+
+        function displayReaderPage(index) {
+            if (!readerPages.length) return;
+            readerPageDisplay.innerHTML = DOMPurify.sanitize(readerPages[index].replace(/\n/g, '<br>'));
+            readerPageIndicator.textContent = `صفحة ${index+1} من ${readerPages.length}`;
+            readerPrevPage.disabled = index === 0;
+            readerNextPage.disabled = index === readerPages.length-1;
+        }
+
+        function closeReader() {
+            readingPage.classList.remove('active');
+            document.querySelector('.app-container').style.display = 'flex';
+            currentBookId = null;
+            updateStatsUI(); renderBooks();
+        }
+
+        function openDeleteModal(id) { lib.bookToDelete = id; deleteMessage.textContent = `حذف "${lib.books.find(b=>b.id==id)?.title}"؟`; confirmDeleteModal.classList.add('active'); }
+        function exportBook(book) { const blob = new Blob([JSON.stringify(book)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${book.title}.json`; a.click(); }
+
+        // ---------- الأحداث ----------
+        document.getElementById('addBookBtn').onclick = () => {
+            editingId.value = ''; modalTitle.innerHTML = '<i class="fas fa-plus-circle"></i> إضافة كتاب';
+            bookTitleInp.value = bookAuthorInp.value = bookNotesInp.value = ''; bookPagesInp.value = 1;
+            currentRating=0; updateRatingStars(); pagesContent = ['']; totalPages=1; updateContentPreview();
+            audioDataURL = null; audioPreview.style.display = 'none'; deleteAudioBtn.style.display = 'none';
+            bookModal.classList.add('active');
+        };
+        cancelAddBtn.onclick = () => bookModal.classList.remove('active');
+        saveBookBtn.onclick = () => {
+            const title = bookTitleInp.value.trim();
+            const contentJson = bookContentHidden.value;
+            if (!title || !contentJson) { alert('العنوان والنص مطلوبان'); return; }
+            const cat = customCategoryInp.value.trim() || document.querySelector('.cat-option.selected')?.dataset.cat || 'أخرى';
+            const book = {
+                title, author: bookAuthorInp.value.trim(), content: contentJson, category: cat,
+                pages: parseInt(bookPagesInp.value) || 1, year: new Date().getFullYear(),
+                description: '', rating: currentRating, notes: bookNotesInp.value,
+                audioFile: audioDataURL, progress: 0, isFavorite: false, quotes: []
+            };
+            if (editingId.value) lib.update(parseInt(editingId.value), book);
+            else lib.add(book);
+            bookModal.classList.remove('active');
+            updateStatsUI(); renderBooks(); renderCategories();
+        };
+        openPagesEditorBtn.onclick = openPagesEditor;
+        prevPageBtn.onclick = () => { if (currentPageIndex>0) { saveCurrentPage(); currentPageIndex--; loadPageEditor(currentPageIndex); renderPageTabs(); } };
+        nextPageBtn.onclick = () => { if (currentPageIndex<totalPages-1) { saveCurrentPage(); currentPageIndex++; loadPageEditor(currentPageIndex); renderPageTabs(); } };
+        cancelPagesBtn.onclick = () => pagesEditorModal.classList.remove('active');
+        donePagesBtn.onclick = donePagesEditor;
+        readerPrevPage.onclick = () => { if (readerCurrentPage>0) { readerCurrentPage--; displayReaderPage(readerCurrentPage); } };
+        readerNextPage.onclick = () => { if (readerCurrentPage<readerPages.length-1) { readerCurrentPage++; displayReaderPage(readerCurrentPage); } };
+        backToLibraryBtn.onclick = closeReader;
+        nightModeBtn.onclick = () => { lib.toggleNightMode(); nightIcon.className = lib.nightMode ? 'fas fa-sun' : 'fas fa-moon'; };
+        editModeBtn.onclick = () => { lib.editMode = !lib.editMode; editModeBtn.style.background = lib.editMode ? '#2ecc71' : ''; renderBooks(); };
+        
+        addCategorySidebarBtn.onclick = () => addCategoryModal.classList.add('active');
+        cancelAddCategoryBtn.onclick = () => addCategoryModal.classList.remove('active');
+        saveNewCategoryBtn.onclick = () => {
+            const name = newCategoryName.value.trim();
+            if (name) {
+                lib.addCustomCategory(name);
+                addCategoryModal.classList.remove('active');
+                newCategoryName.value = '';
+                renderCategories();
+            }
+        };
+        
+        increaseFontBtn.onclick = () => { let s = parseFloat(window.getComputedStyle(readerPageDisplay).fontSize); readerPageDisplay.style.fontSize = (s+2)+'px'; };
+        decreaseFontBtn.onclick = () => { let s = parseFloat(window.getComputedStyle(readerPageDisplay).fontSize); readerPageDisplay.style.fontSize = Math.max(14, s-2)+'px'; };
+        fontFamilySelect.onchange = e => readerPageDisplay.style.fontFamily = e.target.value;
+        focusModeBtn.onclick = () => document.body.classList.toggle('focus-mode');
+        similarBooksBtn.onclick = () => { if (currentBookId) { const b = lib.books.find(b=>b.id==currentBookId); lib.searchTerm = b.author || b.category; closeReader(); renderBooks(); } };
+        
+        // إزالة وظيفة الاقتباسات من الأفتار
+        userAvatar.onclick = null;
+        
+        audioFileInput.onchange = e => {
+            const f = e.target.files[0];
+            if (f) {
+                const r = new FileReader();
+                r.onload = ev => {
+                    audioDataURL = ev.target.result;
+                    audioPreview.src = audioDataURL;
+                    audioPreview.style.display = 'block';
+                    deleteAudioBtn.style.display = 'inline-block';
+                };
+                r.readAsDataURL(f);
+            }
+        };
+        deleteAudioBtn.onclick = () => {
+            audioDataURL = null;
+            audioPreview.style.display = 'none';
+            deleteAudioBtn.style.display = 'none';
+            audioFileInput.value = '';
+        };
+        
+        confirmDeleteBtn.onclick = () => { if (lib.bookToDelete) { lib.delete(lib.bookToDelete); updateStatsUI(); renderBooks(); } confirmDeleteModal.classList.remove('active'); };
+        cancelDeleteBtn.onclick = () => confirmDeleteModal.classList.remove('active');
+        deleteAllBtn.onclick = () => { if (confirm('حذف جميع الكتب؟')) { lib.books = []; lib.save(); updateStatsUI(); renderBooks(); } };
+        exportDataBtn.onclick = () => { const blob = new Blob([JSON.stringify(lib.books)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'مكتبتي.json'; a.click(); };
+        importDataBtn.onclick = () => importFileInput.click();
+        importFileInput.onchange = e => { const f = e.target.files[0]; if (f) { const r = new FileReader(); r.onload = ev => { lib.books = JSON.parse(ev.target.result); lib.save(); updateStatsUI(); renderBooks(); }; r.readAsText(f); } };
+        searchInput.oninput = e => { lib.searchTerm = e.target.value; renderBooks(); };
+        
+        sortBtn.onclick = (e) => { e.stopPropagation(); sortDropdown.style.display = sortDropdown.style.display==='block'?'none':'block'; filterDropdown.style.display='none'; };
+        filterBtn.onclick = (e) => { e.stopPropagation(); filterDropdown.style.display = filterDropdown.style.display==='block'?'none':'block'; sortDropdown.style.display='none'; };
+        document.querySelectorAll('#sortDropdown .dropdown-item').forEach(item => item.onclick = function() {
+            lib.currentSort = this.dataset.sort; sortDropdown.style.display='none'; renderBooks();
+        });
+        document.querySelectorAll('#filterDropdown .dropdown-item').forEach(item => item.onclick = function() {
+            lib.currentFilter = this.dataset.filter; filterDropdown.style.display='none'; renderBooks();
+        });
+        document.addEventListener('click', () => { sortDropdown.style.display='none'; filterDropdown.style.display='none'; });
+        document.addEventListener('keydown', e => { if (e.ctrlKey && e.key==='k') { e.preventDefault(); searchInput.focus(); } if (e.key==='Escape') { bookModal.classList.remove('active'); pagesEditorModal.classList.remove('active'); confirmDeleteModal.classList.remove('active'); addCategoryModal.classList.remove('active'); } });
+        
+        // بدء
+        updateRatingStars();
+        renderCategories();
+        updateStatsUI();
+        renderBooks();
+        setInterval(() => lib.save(), 120000);
+    })();
+</script>
+</body>
+</html>
