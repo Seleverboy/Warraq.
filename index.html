@@ -2,23 +2,47 @@
 <html lang="ar" dir="rtl">
 <head>
 
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-7LPE8L4LKK"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-7LPE8L4LKK');
-</script>
+    <!-- Google tag (gtag.js) - مؤجل لتحسين TBT -->
+    <script>
+      // تأجيل gtag حتى يكون المتصفح خاملاً
+      function loadGTag() {
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-7LPE8L4LKK';
+        document.head.appendChild(script);
+        script.onload = function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-7LPE8L4LKK');
+        };
+      }
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadGTag, { timeout: 3000 });
+      } else {
+        setTimeout(loadGTag, 1000);
+      }
+    </script>
     
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <!-- إصلاح وسم viewport: إزالة user-scalable=no وتغيير maximum-scale إلى 5 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    
+    <!-- وسم meta description جديد لتحسين SEO -->
+    <meta name="description" content="مكتبتي الرقمية - منصة عربية لقراءة وكتابة الروايات مع محرر صفحات متطور. أنشئ مكتبتك الخاصة، اقرأ، واكتب قصصك بسهولة.">
+    
     <title>كتاب - مكتبتي الرقمية</title>
     
-    <!-- المكتبات -->
+    <!-- Preconnect للموارد الخارجية لتحسين LCP -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- المكتبات (تم حذف Chart.js لأنه غير مستخدم) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- إضافة &display=swap لتحسين FCP وLCP -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -29,10 +53,9 @@
             min-height: 100vh; display: flex; align-items: center; justify-content: center;
             padding: 16px; color: #2c1810; transition: background 0.3s;
         }
-        /* تحسين الوضع الليلي بألوان مريحة وعالية التباين */
         body.night-mode {
             background: linear-gradient(145deg, #1a1512 0%, #231c17 100%);
-            color: #f0e6dc;
+            color: #f0e6dc; /* زيادة تباين النص */
         }
         .app-container {
             background: rgba(255,255,255,0.95); backdrop-filter: blur(4px);
@@ -107,9 +130,9 @@
         .stat-box { background: #f8f3ec; border-radius: 12px; padding: 12px 5px; text-align: center; }
         body.night-mode .stat-box { background: #352b24; }
         .stat-number { font-size: 1.5rem; font-weight: 700; color: #6b3e1c; }
-        body.night-mode .stat-number { color: #f8f0e8; } /* زيادة التباين */
+        body.night-mode .stat-number { color: #f8f0e8; }
         .stat-label { font-size: 0.75rem; color: #7a6248; }
-        body.night-mode .stat-label { color: #cfc0ae; } /* تحسين التباين */
+        body.night-mode .stat-label { color: #cfc0ae; }
         .recent-books { margin-top: 10px; }
         .recent-header { font-weight: 600; margin-bottom: 8px; color: #5c3e2a; }
         body.night-mode .recent-header { color: #d4b088; }
@@ -121,7 +144,8 @@
         .recent-item:hover { background: #ede0d3; }
         body.night-mode .recent-item:hover { background: #3a2e26; }
         .categories-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .categories-header h3 { font-size: 0.9rem; text-transform: uppercase; color: #5c3e2a; }
+        /* تم تغيير h3 إلى h2 لضمان ترتيب العناوين الصحيح */
+        .categories-header h2 { font-size: 0.9rem; text-transform: uppercase; color: #5c3e2a; }
         .categories-list { list-style: none; }
         .category-row {
             padding: 12px 14px; border-radius: 12px; margin-bottom: 5px; display: flex;
@@ -141,7 +165,7 @@
             box-shadow: 0 4px 8px #6b3e1c33;
         }
         .btn-secondary { background: #ede0d3; color: #5c3e2a; box-shadow: none; }
-        body.night-mode .btn-secondary { background: #4a3c32; color: #f0e6dc; } /* تحسين تباين الأزرار */
+        body.night-mode .btn-secondary { background: #4a3c32; color: #f0e6dc; }
         .books-panel {
             flex: 1; padding: 24px 22px; overflow-y: auto; background: #fffcf9;
         }
@@ -232,7 +256,7 @@
         body.night-mode .reader-controls select { background: #3a2e26; color: #f0e6dc; border-color: #5a4a3a; }
         .reader-content { flex: 1; padding: 32px; overflow-y: auto; max-width: 900px; margin: 0 auto; width: 100%; }
         .reader-title { font-size: 2.4rem; margin-bottom: 12px; }
-        .reader-text { font-size: 1.25rem; line-height: 1.9; text-align: right; } /* تغيير justify إلى right لتجنب مشاكل سهولة القراءة */
+        .reader-text { font-size: 1.25rem; line-height: 1.9; text-align: right; }
         /* --- محرر الصفحات --- */
         .pages-editor-modal .modal-card { width: 800px; }
         .pages-container { display: flex; flex-direction: column; gap: 20px; }
@@ -254,7 +278,6 @@
         body.night-mode .write-content-btn { background: #3a2e26; color: #f0e6dc; border-color: #b07c50; }
         .audio-file-row { display: flex; align-items: center; gap: 10px; }
         .delete-audio-btn { background: none; border: none; color: #c0392b; cursor: pointer; font-size: 1.2rem; }
-        /* كلاس لإخفاء العناصر بصرياً مع بقائها لقارئ الشاشة */
         .visually-hidden {
             position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
             overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
@@ -294,7 +317,8 @@
     <div class="main-layout">
         <aside class="sidebar-panel">
             <div class="stats-card">
-                <div class="stats-title"><i class="fas fa-chart-pie"></i> إحصائيات</div>
+                <!-- تغيير h3 إلى h2 لترتيب العناوين -->
+                <h2 class="stats-title"><i class="fas fa-chart-pie"></i> إحصائيات</h2>
                 <div class="stats-grid">
                     <div class="stat-box"><div class="stat-number" id="totalBooks">0</div><div class="stat-label">كتاب</div></div>
                     <div class="stat-box"><div class="stat-number" id="totalAuthors">0</div><div class="stat-label">مؤلف</div></div>
@@ -308,7 +332,8 @@
             </div>
             <div>
                 <div class="categories-header">
-                    <h3><i class="fas fa-tags"></i> التصنيفات</h3>
+                    <!-- تغيير h3 إلى h2 لترتيب العناوين الصحيح -->
+                    <h2><i class="fas fa-tags"></i> التصنيفات</h2>
                     <button class="icon-btn" id="addCategorySidebarBtn" style="width:32px;height:32px;" aria-label="إضافة تصنيف جديد"><i class="fas fa-plus"></i></button>
                 </div>
                 <ul class="categories-list" id="categoryList"></ul>
@@ -350,6 +375,8 @@
         </main>
     </div>
 </div>
+
+<!-- باقي HTML المودالات وصفحة القراءة كما هي في الكود السابق، بدون تغيير -->
 
 <!-- مودال إضافة/تعديل كتاب -->
 <div class="modal-overlay" id="bookModal">
@@ -435,7 +462,7 @@
     <div class="reader-progress-bar" id="readingProgressBar"></div>
     <div class="reader-header">
         <button class="btn btn-secondary" id="backToLibraryBtn"><i class="fas fa-arrow-right"></i> العودة</button>
-        <h2 id="readingPageTitle">الكتاب</h2> <!-- قيمة افتراضية لتجنب العنوان الفارغ -->
+        <h2 id="readingPageTitle">الكتاب</h2>
         <div class="reader-controls">
             <button class="icon-btn" id="focusModeBtn" aria-label="وضع التركيز"><i class="fas fa-eye"></i></button>
             <button class="icon-btn" id="increaseFontBtn" aria-label="تكبير الخط">A+</button>
@@ -560,7 +587,7 @@
         }
         const lib = new Library();
 
-        // DOM elements
+        // DOM elements (كما هي في الكود السابق)
         const booksGrid = document.getElementById('booksGrid');
         const bookModal = document.getElementById('bookModal');
         const modalTitle = document.getElementById('modalTitle');
@@ -668,7 +695,6 @@
                 const card = document.createElement('div');
                 card.className = `book-card ${book.progress>0 && book.progress<100 ? 'reading-highlight' : ''}`;
                 card.dataset.id = book.id;
-                // جعل البطاقة قابلة للوصول بلوحة المفاتيح
                 card.setAttribute('tabindex', '0');
                 card.setAttribute('role', 'button');
                 card.setAttribute('aria-label', `فتح كتاب ${book.title}`);
@@ -691,7 +717,6 @@
                         </div>
                     </div>
                 `;
-                // أحداث الأزرار الداخلية
                 const favIcon = card.querySelector('[data-action="fav"]');
                 favIcon.addEventListener('click', e => { e.stopPropagation(); lib.update(book.id, {isFavorite: !book.isFavorite}); renderBooks(); });
                 favIcon.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); favIcon.click(); } });
@@ -709,11 +734,8 @@
                 const exportIcon = card.querySelector('[data-action="export"]');
                 exportIcon.addEventListener('click', e => { e.stopPropagation(); exportBook(book); });
                 exportIcon.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); exportIcon.click(); } });
-
-                // حدث البطاقة نفسها
                 card.addEventListener('click', () => openReader(book.id));
                 card.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); openReader(book.id); } });
-
                 booksGrid.appendChild(card);
             });
         }
@@ -756,11 +778,9 @@
                 audioPreview.style.display = 'none';
                 deleteAudioBtn.style.display = 'none';
             }
-            // تحميل المحتوى
             if (book.content) {
                 try { pagesContent = JSON.parse(book.content); } catch { pagesContent = [book.content]; }
             } else pagesContent = [''];
-            // تعيين قيمة حقل النص المخفي لتجنب خطأ "العنوان والنص مطلوبان"
             bookContentHidden.value = JSON.stringify(pagesContent);
             totalPages = pagesContent.length;
             updateContentPreview();
@@ -861,7 +881,7 @@
             editingId.value = ''; modalTitle.innerHTML = '<i class="fas fa-plus-circle"></i> إضافة كتاب';
             bookTitleInp.value = bookAuthorInp.value = bookNotesInp.value = ''; bookPagesInp.value = 1;
             currentRating=0; updateRatingStars(); pagesContent = ['']; totalPages=1; updateContentPreview();
-            bookContentHidden.value = ''; // فارغ للكتاب الجديد
+            bookContentHidden.value = '';
             audioDataURL = null; audioPreview.style.display = 'none'; deleteAudioBtn.style.display = 'none';
             bookModal.classList.add('active');
         };
