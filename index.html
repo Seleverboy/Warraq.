@@ -1,52 +1,55 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-
-    <!-- Google tag (gtag.js) - مؤجل لتحسين TBT -->
+    <!-- تنظيف الكوكيز مبكراً قبل أي شيء -->
     <script>
-      // تأجيل gtag حتى يكون المتصفح خاملاً
-      function loadGTag() {
-        var script = document.createElement('script');
-        script.async = true;
-        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-7LPE8L4LKK';
-        document.head.appendChild(script);
-        script.onload = function() {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-7LPE8L4LKK');
-        };
-      }
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadGTag, { timeout: 3000 });
-      } else {
-        setTimeout(loadGTag, 1000);
-      }
+      (function() {
+        var MAX_SIZE = 4000;
+        var cookies = document.cookie.split(';');
+        var total = 0;
+        cookies.forEach(function(c) {
+          var name = c.trim().split('=')[0];
+          if (name === '_ga' || name === '_gid' || name === '_gat') {
+            total += c.length;
+            if (total > MAX_SIZE) {
+              document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            }
+          }
+        });
+      })();
     </script>
-    
+
+    <!-- Google tag (gtag.js) بتكوين مخفف للكوكيز -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7LPE8L4LKK"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-7LPE8L4LKK', {
+        cookie_expires: 365 * 24 * 60 * 60,
+        cookie_flags: 'SameSite=None;Secure',
+        cookie_update: false
+      });
+    </script>
+
     <meta charset="UTF-8">
-    <!-- إصلاح وسم viewport: إزالة user-scalable=no وتغيير maximum-scale إلى 5 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    
-    <!-- وسم meta description جديد لتحسين SEO -->
     <meta name="description" content="مكتبتي الرقمية - منصة عربية لقراءة وكتابة الروايات مع محرر صفحات متطور. أنشئ مكتبتك الخاصة، اقرأ، واكتب قصصك بسهولة.">
-    
     <title>كتاب - مكتبتي الرقمية</title>
-    
-    <!-- Preconnect للموارد الخارجية لتحسين LCP -->
+
+    <!-- Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    
-    <!-- المكتبات (تم حذف Chart.js لأنه غير مستخدم) -->
+
+    <!-- المكتبات -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- إضافة &display=swap لتحسين FCP وLCP -->
+    <!-- خطوط مع display=swap -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <style>
-        /* ========== الأنماط الأساسية ========== */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
         body {
             background: linear-gradient(145deg, #f7f3eb 0%, #e8dfd3 100%);
@@ -55,7 +58,7 @@
         }
         body.night-mode {
             background: linear-gradient(145deg, #1a1512 0%, #231c17 100%);
-            color: #f0e6dc; /* زيادة تباين النص */
+            color: #f0e6dc;
         }
         .app-container {
             background: rgba(255,255,255,0.95); backdrop-filter: blur(4px);
@@ -68,7 +71,6 @@
             background: rgba(28,22,18,0.96); box-shadow: 0 20px 40px -8px #00000099;
             border: 1px solid #3f352e;
         }
-        /* --- الهيدر --- */
         .app-header {
             padding: 14px 24px; background: linear-gradient(98deg, #8B4513 0%, #A0522D 100%);
             color: white; display: flex; align-items: center; justify-content: space-between;
@@ -111,7 +113,6 @@
             color: #2c1810; border: 2px solid #fff3e0; cursor: pointer;
         }
         body.night-mode .avatar { background: #a77b54; color: #1a1512; border-color: #c0a080; }
-        /* --- التخطيط الرئيسي --- */
         .main-layout { display: flex; flex: 1; overflow: hidden; }
         .sidebar-panel {
             width: 300px; background: #fbf9f5; border-left: 1px solid #e2d8cc;
@@ -144,7 +145,6 @@
         .recent-item:hover { background: #ede0d3; }
         body.night-mode .recent-item:hover { background: #3a2e26; }
         .categories-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        /* تم تغيير h3 إلى h2 لضمان ترتيب العناوين الصحيح */
         .categories-header h2 { font-size: 0.9rem; text-transform: uppercase; color: #5c3e2a; }
         .categories-list { list-style: none; }
         .category-row {
@@ -211,7 +211,6 @@
         .book-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
         .book-actions i { margin: 0 5px; color: #7a6248; font-size: 1.1rem; cursor: pointer; }
         .book-actions i:hover { color: #8B4513; }
-        /* --- المودالات --- */
         .modal-overlay {
             position: fixed; inset: 0; background: #00000099; backdrop-filter: blur(4px);
             display: flex; align-items: center; justify-content: center; z-index: 2000;
@@ -239,7 +238,6 @@
         }
         .cat-option.selected { background: #8B4513; color: white; border-color: #8B4513; }
         .modal-footer { padding: 20px 28px; border-top: 1px solid #e2d6ca; display: flex; justify-content: flex-end; gap: 14px; }
-        /* --- صفحة القراءة --- */
         .reader-overlay {
             position: fixed; inset: 0; background: #f8f2ea; z-index: 3000;
             display: none; flex-direction: column;
@@ -257,7 +255,6 @@
         .reader-content { flex: 1; padding: 32px; overflow-y: auto; max-width: 900px; margin: 0 auto; width: 100%; }
         .reader-title { font-size: 2.4rem; margin-bottom: 12px; }
         .reader-text { font-size: 1.25rem; line-height: 1.9; text-align: right; }
-        /* --- محرر الصفحات --- */
         .pages-editor-modal .modal-card { width: 800px; }
         .pages-container { display: flex; flex-direction: column; gap: 20px; }
         .page-tabs { display: flex; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid #ddd0c2; padding-bottom: 10px; }
@@ -317,7 +314,6 @@
     <div class="main-layout">
         <aside class="sidebar-panel">
             <div class="stats-card">
-                <!-- تغيير h3 إلى h2 لترتيب العناوين -->
                 <h2 class="stats-title"><i class="fas fa-chart-pie"></i> إحصائيات</h2>
                 <div class="stats-grid">
                     <div class="stat-box"><div class="stat-number" id="totalBooks">0</div><div class="stat-label">كتاب</div></div>
@@ -332,7 +328,6 @@
             </div>
             <div>
                 <div class="categories-header">
-                    <!-- تغيير h3 إلى h2 لترتيب العناوين الصحيح -->
                     <h2><i class="fas fa-tags"></i> التصنيفات</h2>
                     <button class="icon-btn" id="addCategorySidebarBtn" style="width:32px;height:32px;" aria-label="إضافة تصنيف جديد"><i class="fas fa-plus"></i></button>
                 </div>
@@ -376,48 +371,28 @@
     </div>
 </div>
 
-<!-- باقي HTML المودالات وصفحة القراءة كما هي في الكود السابق، بدون تغيير -->
-
-<!-- مودال إضافة/تعديل كتاب -->
+<!-- Modal إضافة/تعديل كتاب -->
 <div class="modal-overlay" id="bookModal">
     <div class="modal-card">
         <div class="modal-header" id="modalTitle"><i class="fas fa-plus-circle"></i> إضافة كتاب</div>
         <div class="modal-body">
             <input type="hidden" id="editingBookId">
-            <div class="form-row">
-                <label for="bookTitle">العنوان *</label>
-                <input class="form-control" id="bookTitle" placeholder="أدخل العنوان">
-            </div>
-            <div class="form-row">
-                <label for="bookAuthor">المؤلف</label>
-                <input class="form-control" id="bookAuthor" placeholder="اسم المؤلف (اختياري)">
-            </div>
-            <div class="form-row">
-                <label for="bookPages">عدد الصفحات</label>
-                <input class="form-control" type="number" id="bookPages" min="1" value="1">
-            </div>
-            <div class="form-row">
-                <label>التصنيف</label>
+            <div class="form-row"><label for="bookTitle">العنوان *</label><input class="form-control" id="bookTitle" placeholder="أدخل العنوان"></div>
+            <div class="form-row"><label for="bookAuthor">المؤلف</label><input class="form-control" id="bookAuthor" placeholder="اسم المؤلف (اختياري)"></div>
+            <div class="form-row"><label for="bookPages">عدد الصفحات</label><input class="form-control" type="number" id="bookPages" min="1" value="1"></div>
+            <div class="form-row"><label>التصنيف</label>
                 <div class="category-options" id="categoryOptions"></div>
                 <label for="customCategory" class="visually-hidden">تصنيف آخر</label>
                 <input class="form-control" id="customCategory" placeholder="أو اكتب تصنيف جديد">
             </div>
-            <div class="form-row">
-                <label>نص الكتاب *</label>
+            <div class="form-row"><label>نص الكتاب *</label>
                 <div id="contentPreview" style="margin-bottom:8px; font-size:0.9rem; color: #7a6248;"></div>
                 <button type="button" class="write-content-btn" id="openPagesEditorBtn"><i class="fas fa-pen-fancy"></i> كتابة النص (محرر الصفحات)</button>
                 <input type="hidden" id="bookContentHidden">
             </div>
-            <div class="form-row">
-                <label for="bookNotes">ملاحظات</label>
-                <textarea class="form-control" id="bookNotes" rows="2"></textarea>
-            </div>
-            <div class="form-row">
-                <label>تقييم</label>
-                <div class="rating-stars" id="ratingStarsInput" role="radiogroup" aria-label="تقييم الكتاب"></div>
-            </div>
-            <div class="form-row">
-                <label for="audioFileInput">ملف صوتي (MP3)</label>
+            <div class="form-row"><label for="bookNotes">ملاحظات</label><textarea class="form-control" id="bookNotes" rows="2"></textarea></div>
+            <div class="form-row"><label>تقييم</label><div class="rating-stars" id="ratingStarsInput" role="radiogroup" aria-label="تقييم الكتاب"></div></div>
+            <div class="form-row"><label for="audioFileInput">ملف صوتي (MP3)</label>
                 <div class="audio-file-row">
                     <input type="file" id="audioFileInput" accept="audio/mp3" style="flex:1;" aria-label="اختر ملف صوتي">
                     <button type="button" id="deleteAudioBtn" class="delete-audio-btn" title="حذف الملف الصوتي" aria-label="حذف الملف الصوتي" style="display:none;"><i class="fas fa-trash-alt"></i></button>
@@ -432,7 +407,7 @@
     </div>
 </div>
 
-<!-- مودال محرر الصفحات -->
+<!-- Modal محرر الصفحات -->
 <div class="modal-overlay pages-editor-modal" id="pagesEditorModal">
     <div class="modal-card" style="width:800px;">
         <div class="modal-header"><i class="fas fa-file-alt"></i> كتابة النص (صفحات)</div>
@@ -491,16 +466,69 @@
     </div>
 </div>
 
-<!-- مودال تأكيد الحذف -->
+<!-- Modal تأكيد الحذف -->
 <div class="modal-overlay" id="confirmDeleteModal"><div class="modal-card" style="width:400px;"><div class="modal-header">تأكيد الحذف</div><div class="modal-body"><p id="deleteMessage"></p></div><div class="modal-footer"><button class="btn btn-secondary" id="cancelDeleteBtn">إلغاء</button><button class="btn" id="confirmDeleteBtn" style="background:#c0392b;">حذف</button></div></div></div>
 
-<!-- مودال إضافة تصنيف -->
+<!-- Modal إضافة تصنيف -->
 <div class="modal-overlay" id="addCategoryModal"><div class="modal-card" style="width:400px;"><div class="modal-header">إضافة تصنيف</div><div class="modal-body"><label for="newCategoryName" class="visually-hidden">اسم التصنيف الجديد</label><input class="form-control" id="newCategoryName" placeholder="اسم التصنيف"></div><div class="modal-footer"><button class="btn btn-secondary" id="cancelAddCategoryBtn">إلغاء</button><button class="btn" id="saveNewCategoryBtn">حفظ</button></div></div></div>
 
 <script>
     (function(){
         "use strict";
-        const STORAGE_KEY = 'kitab_enhanced_v3';
+        const STORAGE_KEY = 'kitab_enhanced_v5';
+
+        // ========== IndexedDB للصوتيات ==========
+        const AudioDB = {
+            _db: null,
+            async open() {
+                if (this._db) return this._db;
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open('WarraqAudio', 1);
+                    request.onupgradeneeded = (e) => {
+                        const db = e.target.result;
+                        if (!db.objectStoreNames.contains('audio')) {
+                            db.createObjectStore('audio', { keyPath: 'id' });
+                        }
+                    };
+                    request.onsuccess = (e) => {
+                        this._db = e.target.result;
+                        resolve(this._db);
+                    };
+                    request.onerror = (e) => reject(e.target.error);
+                });
+            },
+            async save(id, base64Data) {
+                const db = await this.open();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction('audio', 'readwrite');
+                    const store = tx.objectStore('audio');
+                    store.put({ id, data: base64Data });
+                    tx.oncomplete = () => resolve(id);
+                    tx.onerror = (e) => reject(e.target.error);
+                });
+            },
+            async get(id) {
+                const db = await this.open();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction('audio', 'readonly');
+                    const store = tx.objectStore('audio');
+                    const request = store.get(id);
+                    request.onsuccess = () => resolve(request.result?.data || null);
+                    request.onerror = (e) => reject(e.target.error);
+                });
+            },
+            async remove(id) {
+                const db = await this.open();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction('audio', 'readwrite');
+                    const store = tx.objectStore('audio');
+                    store.delete(id);
+                    tx.oncomplete = () => resolve(true);
+                    tx.onerror = (e) => reject(e.target.error);
+                });
+            }
+        };
+
         function saveLibrary(data) {
             try { localStorage.setItem(STORAGE_KEY, LZString.compressToUTF16(JSON.stringify(data))); return true; }
             catch(e) { alert('فشل الحفظ'); return false; }
@@ -587,7 +615,7 @@
         }
         const lib = new Library();
 
-        // DOM elements (كما هي في الكود السابق)
+        // DOM elements
         const booksGrid = document.getElementById('booksGrid');
         const bookModal = document.getElementById('bookModal');
         const modalTitle = document.getElementById('modalTitle');
@@ -658,6 +686,7 @@
         let currentRating = 0;
         let currentBookId = null;
         let audioDataURL = null;
+        let existingAudioId = null;
         let pagesContent = [];
         let currentPageIndex = 0;
         let totalPages = 1;
@@ -749,17 +778,36 @@
             renderRecentBooks();
         }
 
+        // ========== دالة عرض أحدث الكتب - تم إصلاح الثغرة الأمنية ==========
         function renderRecentBooks() {
             const recent = lib.getRecentBooks(3);
-            recentBooksList.innerHTML = recent.map(b => 
-                `<div class="recent-item" tabindex="0" role="button" aria-label="${DOMPurify.sanitize(b.title)}" onclick="document.getElementById('searchInput').value='${b.title}'; document.getElementById('searchInput').dispatchEvent(new Event('input'));">
+            recentBooksList.innerHTML = '';
+            recent.forEach(b => {
+                const div = document.createElement('div');
+                div.className = 'recent-item';
+                div.setAttribute('tabindex', '0');
+                div.setAttribute('role', 'button');
+                // تنظيف العنوان من أي وسوم ضارة قبل وضعه في aria-label
+                div.setAttribute('aria-label', DOMPurify.sanitize(b.title));
+                div.innerHTML = `
                     <span>${DOMPurify.sanitize(b.title)}</span>
                     <span>${b.author || ''}</span>
-                </div>`
-            ).join('');
+                `;
+                div.addEventListener('click', () => {
+                    searchInput.value = b.title;
+                    searchInput.dispatchEvent(new Event('input'));
+                });
+                div.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        div.click();
+                    }
+                });
+                recentBooksList.appendChild(div);
+            });
         }
 
-        function openEditModal(book) {
+        async function openEditModal(book) {
             editingId.value = book.id;
             modalTitle.innerHTML = '<i class="fas fa-edit"></i> تعديل كتاب';
             bookTitleInp.value = book.title;
@@ -769,15 +817,31 @@
             currentRating = book.rating || 0;
             updateRatingStars();
             document.querySelectorAll('.cat-option').forEach(o => { o.classList.remove('selected'); if (o.dataset.cat === book.category) o.classList.add('selected'); });
-            audioDataURL = book.audioFile;
-            if (audioDataURL) {
-                audioPreview.src = audioDataURL;
-                audioPreview.style.display = 'block';
-                deleteAudioBtn.style.display = 'inline-block';
+            
+            existingAudioId = book.audioFile || null;
+            if (existingAudioId) {
+                try {
+                    const blob = await AudioDB.get(existingAudioId);
+                    if (blob) {
+                        audioDataURL = blob;
+                        audioPreview.src = blob;
+                        audioPreview.style.display = 'block';
+                        deleteAudioBtn.style.display = 'inline-block';
+                    } else {
+                        audioPreview.style.display = 'none';
+                        deleteAudioBtn.style.display = 'none';
+                        existingAudioId = null;
+                    }
+                } catch(e) {
+                    audioPreview.style.display = 'none';
+                    deleteAudioBtn.style.display = 'none';
+                }
             } else {
+                audioDataURL = null;
                 audioPreview.style.display = 'none';
                 deleteAudioBtn.style.display = 'none';
             }
+
             if (book.content) {
                 try { pagesContent = JSON.parse(book.content); } catch { pagesContent = [book.content]; }
             } else pagesContent = [''];
@@ -843,14 +907,23 @@
         function saveCurrentPage() { pagesContent[currentPageIndex] = currentPageEditor.value; }
         function donePagesEditor() { saveCurrentPage(); bookContentHidden.value = JSON.stringify(pagesContent); updateContentPreview(); pagesEditorModal.classList.remove('active'); }
 
-        function openReader(bookId) {
+        async function openReader(bookId) {
             const book = lib.books.find(b=>b.id==bookId);
             if (!book) return;
             currentBookId = bookId;
             readingPageTitle.textContent = book.title;
             readingTitle.textContent = book.title;
             readingAuthor.innerHTML = `<i class="fas fa-user"></i> ${book.author || 'غير معروف'}`;
-            document.getElementById('audioPlayerContainer').innerHTML = book.audioFile ? `<audio controls src="${book.audioFile}" aria-label="ملف صوتي للكتاب"></audio>` : '';
+            
+            const container = document.getElementById('audioPlayerContainer');
+            container.innerHTML = '';
+            if (book.audioFile) {
+                const audioBlob = await AudioDB.get(book.audioFile);
+                if (audioBlob) {
+                    container.innerHTML = `<audio controls src="${audioBlob}" aria-label="ملف صوتي للكتاب"></audio>`;
+                }
+            }
+
             try { readerPages = JSON.parse(book.content); } catch { readerPages = [book.content]; }
             readerCurrentPage = 0;
             displayReaderPage(0);
@@ -882,26 +955,38 @@
             bookTitleInp.value = bookAuthorInp.value = bookNotesInp.value = ''; bookPagesInp.value = 1;
             currentRating=0; updateRatingStars(); pagesContent = ['']; totalPages=1; updateContentPreview();
             bookContentHidden.value = '';
-            audioDataURL = null; audioPreview.style.display = 'none'; deleteAudioBtn.style.display = 'none';
+            audioDataURL = null; existingAudioId = null; audioPreview.style.display = 'none'; deleteAudioBtn.style.display = 'none';
             bookModal.classList.add('active');
         };
         cancelAddBtn.onclick = () => bookModal.classList.remove('active');
-        saveBookBtn.onclick = () => {
+        
+        saveBookBtn.onclick = async () => {
             const title = bookTitleInp.value.trim();
             const contentJson = bookContentHidden.value;
             if (!title || !contentJson) { alert('العنوان والنص مطلوبان'); return; }
             const cat = customCategoryInp.value.trim() || document.querySelector('.cat-option.selected')?.dataset.cat || 'أخرى';
+            
+            let finalAudioId = existingAudioId;
+            if (audioDataURL && !existingAudioId) {
+                finalAudioId = 'audio_' + Date.now();
+                await AudioDB.save(finalAudioId, audioDataURL);
+            } else if (!audioDataURL && existingAudioId) {
+                await AudioDB.remove(existingAudioId);
+                finalAudioId = null;
+            }
+            
             const book = {
                 title, author: bookAuthorInp.value.trim(), content: contentJson, category: cat,
                 pages: parseInt(bookPagesInp.value) || 1, year: new Date().getFullYear(),
                 description: '', rating: currentRating, notes: bookNotesInp.value,
-                audioFile: audioDataURL, progress: 0, isFavorite: false, quotes: []
+                audioFile: finalAudioId, progress: 0, isFavorite: false, quotes: []
             };
             if (editingId.value) lib.update(parseInt(editingId.value), book);
             else lib.add(book);
             bookModal.classList.remove('active');
             updateStatsUI(); renderBooks(); renderCategories();
         };
+        
         openPagesEditorBtn.onclick = openPagesEditor;
         prevPageBtn.onclick = () => { if (currentPageIndex>0) { saveCurrentPage(); currentPageIndex--; loadPageEditor(currentPageIndex); renderPageTabs(); } };
         nextPageBtn.onclick = () => { if (currentPageIndex<totalPages-1) { saveCurrentPage(); currentPageIndex++; loadPageEditor(currentPageIndex); renderPageTabs(); } };
@@ -942,6 +1027,7 @@
                     audioPreview.src = audioDataURL;
                     audioPreview.style.display = 'block';
                     deleteAudioBtn.style.display = 'inline-block';
+                    existingAudioId = null;
                 };
                 r.readAsDataURL(f);
             }
@@ -972,7 +1058,7 @@
         document.addEventListener('click', () => { sortDropdown.style.display='none'; filterDropdown.style.display='none'; });
         document.addEventListener('keydown', e => { if (e.ctrlKey && e.key==='k') { e.preventDefault(); searchInput.focus(); } if (e.key==='Escape') { bookModal.classList.remove('active'); pagesEditorModal.classList.remove('active'); confirmDeleteModal.classList.remove('active'); addCategoryModal.classList.remove('active'); } });
         
-        // بدء
+        // بدء التطبيق
         updateRatingStars();
         renderCategories();
         updateStatsUI();
