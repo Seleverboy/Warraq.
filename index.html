@@ -18,7 +18,6 @@
     <!-- المكتبات -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
-    <!-- Chart.js لم نعد نحتاجه لكن نبقيه في حال الرغبة، لكننا حذفنا الرسم -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
@@ -30,10 +29,10 @@
             min-height: 100vh; display: flex; align-items: center; justify-content: center;
             padding: 16px; color: #2c1810; transition: background 0.3s;
         }
-        /* تحسين الوضع الليلي بألوان مريحة */
+        /* تحسين الوضع الليلي بألوان مريحة وعالية التباين */
         body.night-mode {
             background: linear-gradient(145deg, #1a1512 0%, #231c17 100%);
-            color: #e0d6cc;
+            color: #f0e6dc;
         }
         .app-container {
             background: rgba(255,255,255,0.95); backdrop-filter: blur(4px);
@@ -65,7 +64,7 @@
             background: rgba(255,255,255,0.9); color: #2c1810; font-size: 0.95rem;
             outline: none; box-shadow: inset 0 2px 5px #0000000d;
         }
-        body.night-mode .search-wrapper input { background: #2f241c; color: #e0d6cc; }
+        body.night-mode .search-wrapper input { background: #2f241c; color: #f0e6dc; }
         .suggestions-dropdown {
             position: absolute; top: calc(100% + 6px); right: 0; left: 0; background: white;
             border-radius: 16px; box-shadow: 0 8px 20px #00000026; max-height: 240px;
@@ -73,7 +72,7 @@
         }
         body.night-mode .suggestions-dropdown { background: #2c221c; border-color: #5a4a3a; }
         .suggestion-item { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #eee; }
-        body.night-mode .suggestion-item { border-bottom-color: #3f3228; color: #e0d6cc; }
+        body.night-mode .suggestion-item { border-bottom-color: #3f3228; color: #f0e6dc; }
         .suggestion-item:hover { background: #f3ede5; }
         .icon-btn {
             width: 44px; height: 44px; border-radius: 50%; background: #f5deb3e6;
@@ -108,10 +107,9 @@
         .stat-box { background: #f8f3ec; border-radius: 12px; padding: 12px 5px; text-align: center; }
         body.night-mode .stat-box { background: #352b24; }
         .stat-number { font-size: 1.5rem; font-weight: 700; color: #6b3e1c; }
-        body.night-mode .stat-number { color: #e8d9c8; }
+        body.night-mode .stat-number { color: #f8f0e8; } /* زيادة التباين */
         .stat-label { font-size: 0.75rem; color: #7a6248; }
-        body.night-mode .stat-label { color: #b9a590; }
-        /* قسم أحدث الكتب بدل الرسم */
+        body.night-mode .stat-label { color: #cfc0ae; } /* تحسين التباين */
         .recent-books { margin-top: 10px; }
         .recent-header { font-weight: 600; margin-bottom: 8px; color: #5c3e2a; }
         body.night-mode .recent-header { color: #d4b088; }
@@ -143,7 +141,7 @@
             box-shadow: 0 4px 8px #6b3e1c33;
         }
         .btn-secondary { background: #ede0d3; color: #5c3e2a; box-shadow: none; }
-        body.night-mode .btn-secondary { background: #3a2e26; color: #d4b088; }
+        body.night-mode .btn-secondary { background: #4a3c32; color: #f0e6dc; } /* تحسين تباين الأزرار */
         .books-panel {
             flex: 1; padding: 24px 22px; overflow-y: auto; background: #fffcf9;
         }
@@ -182,7 +180,7 @@
         .book-details { padding: 18px 16px; flex: 1; }
         .book-title { font-weight: 700; font-size: 1.15rem; margin-bottom: 6px; }
         .book-author { color: #7a6248; font-size: 0.9rem; margin-bottom: 6px; }
-        body.night-mode .book-author { color: #b9a590; }
+        body.night-mode .book-author { color: #cfc0ae; }
         .rating-stars { color: #f1c40f; margin: 6px 0; }
         .progress-bar-container { height: 5px; background: #e2d6ca; border-radius: 6px; margin: 12px 0; }
         .progress-fill { height: 100%; background: #8B4513; border-radius: 6px; width: 0%; }
@@ -200,7 +198,7 @@
             background: white; border-radius: 24px; width: 600px; max-width: 94%;
             max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 40px -10px black;
         }
-        body.night-mode .modal-card { background: #2a211b; color: #e8ddcf; }
+        body.night-mode .modal-card { background: #2a211b; color: #f0e6dc; }
         .modal-header { padding: 22px 28px; background: #8B4513; color: white; font-size: 1.4rem; }
         .modal-body { padding: 28px; }
         .form-row { margin-bottom: 22px; }
@@ -231,10 +229,10 @@
             padding: 6px 12px; border-radius: 30px; background: #f5deb3; color: #4a2e1a;
             border: 1px solid #ffffff4d; font-weight: 500; cursor: pointer;
         }
-        body.night-mode .reader-controls select { background: #3a2e26; color: #e8ddcf; border-color: #5a4a3a; }
+        body.night-mode .reader-controls select { background: #3a2e26; color: #f0e6dc; border-color: #5a4a3a; }
         .reader-content { flex: 1; padding: 32px; overflow-y: auto; max-width: 900px; margin: 0 auto; width: 100%; }
         .reader-title { font-size: 2.4rem; margin-bottom: 12px; }
-        .reader-text { font-size: 1.25rem; line-height: 1.9; text-align: justify; }
+        .reader-text { font-size: 1.25rem; line-height: 1.9; text-align: right; } /* تغيير justify إلى right لتجنب مشاكل سهولة القراءة */
         /* --- محرر الصفحات --- */
         .pages-editor-modal .modal-card { width: 800px; }
         .pages-container { display: flex; flex-direction: column; gap: 20px; }
@@ -243,7 +241,7 @@
             padding: 8px 18px; border-radius: 30px; background: #ede0d3; cursor: pointer;
             border: 1px solid transparent;
         }
-        body.night-mode .page-tab { background: #3a2e26; color: #e8ddcf; }
+        body.night-mode .page-tab { background: #3a2e26; color: #f0e6dc; }
         .page-tab.active { background: #8B4513; color: white; }
         .page-editor textarea { width: 100%; min-height: 250px; padding: 16px; border-radius: 16px; border: 1.5px solid #ddd0c2; font-size: 1rem; }
         .page-navigation { display: flex; justify-content: space-between; margin-top: 10px; }
@@ -253,9 +251,14 @@
             display: flex; align-items: center; justify-content: center; gap: 10px;
             cursor: pointer;
         }
-        body.night-mode .write-content-btn { background: #3a2e26; color: #e8ddcf; border-color: #b07c50; }
+        body.night-mode .write-content-btn { background: #3a2e26; color: #f0e6dc; border-color: #b07c50; }
         .audio-file-row { display: flex; align-items: center; gap: 10px; }
         .delete-audio-btn { background: none; border: none; color: #c0392b; cursor: pointer; font-size: 1.2rem; }
+        /* كلاس لإخفاء العناصر بصرياً مع بقائها لقارئ الشاشة */
+        .visually-hidden {
+            position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+            overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+        }
         @media (max-width: 700px) {
             .main-layout { flex-direction: column; }
             .sidebar-panel { width: 100%; border-left: none; }
@@ -276,13 +279,14 @@
         </div>
         <div class="header-actions">
             <div class="search-wrapper">
+                <label for="searchInput" class="visually-hidden">بحث</label>
                 <i class="fas fa-search"></i>
                 <input type="text" id="searchInput" placeholder="ابحث عن كتاب أو مؤلف..." autocomplete="off">
                 <div class="suggestions-dropdown" id="searchSuggestions"></div>
             </div>
-            <button class="icon-btn" id="nightModeBtn" title="الوضع الليلي"><i class="fas fa-moon"></i></button>
-            <button class="icon-btn" id="editModeBtn" title="وضع التعديل السريع"><i class="fas fa-pen-to-square"></i></button>
-            <button class="icon-btn" id="addBookBtn" title="إضافة كتاب"><i class="fas fa-plus"></i></button>
+            <button class="icon-btn" id="nightModeBtn" title="الوضع الليلي" aria-label="تبديل الوضع الليلي"><i class="fas fa-moon"></i></button>
+            <button class="icon-btn" id="editModeBtn" title="وضع التعديل السريع" aria-label="تفعيل وضع التعديل السريع"><i class="fas fa-pen-to-square"></i></button>
+            <button class="icon-btn" id="addBookBtn" title="إضافة كتاب" aria-label="إضافة كتاب جديد"><i class="fas fa-plus"></i></button>
             <div class="avatar" id="userAvatar">أ</div>
         </div>
     </header>
@@ -297,7 +301,6 @@
                     <div class="stat-box"><div class="stat-number" id="readBooks">0</div><div class="stat-label">مقروء</div></div>
                     <div class="stat-box"><div class="stat-number" id="readingHours">0</div><div class="stat-label">ساعة</div></div>
                 </div>
-                <!-- استبدال الرسم البياني بقسم أحدث الكتب -->
                 <div class="recent-books">
                     <div class="recent-header"><i class="fas fa-clock"></i> أحدث الكتب</div>
                     <div id="recentBooksList"></div>
@@ -306,12 +309,11 @@
             <div>
                 <div class="categories-header">
                     <h3><i class="fas fa-tags"></i> التصنيفات</h3>
-                    <button class="icon-btn" id="addCategorySidebarBtn" style="width:32px;height:32px;"><i class="fas fa-plus"></i></button>
+                    <button class="icon-btn" id="addCategorySidebarBtn" style="width:32px;height:32px;" aria-label="إضافة تصنيف جديد"><i class="fas fa-plus"></i></button>
                 </div>
                 <ul class="categories-list" id="categoryList"></ul>
             </div>
             <div class="action-buttons">
-                <!-- حذف زر استيراد تجريبي -->
                 <button class="btn btn-secondary" id="exportDataBtn"><i class="fas fa-download"></i> تصدير JSON</button>
                 <button class="btn btn-secondary" id="importDataBtn"><i class="fas fa-upload"></i> استيراد JSON</button>
                 <input type="file" id="importFileInput" accept=".json" style="display:none">
@@ -355,26 +357,45 @@
         <div class="modal-header" id="modalTitle"><i class="fas fa-plus-circle"></i> إضافة كتاب</div>
         <div class="modal-body">
             <input type="hidden" id="editingBookId">
-            <div class="form-row"><label>العنوان *</label><input class="form-control" id="bookTitle" placeholder="أدخل العنوان"></div>
-            <div class="form-row"><label>المؤلف</label><input class="form-control" id="bookAuthor" placeholder="اسم المؤلف (اختياري)"></div>
-            <div class="form-row"><label>عدد الصفحات</label><input class="form-control" type="number" id="bookPages" min="1" value="1"></div>
-            <div class="form-row"><label>التصنيف</label>
+            <div class="form-row">
+                <label for="bookTitle">العنوان *</label>
+                <input class="form-control" id="bookTitle" placeholder="أدخل العنوان">
+            </div>
+            <div class="form-row">
+                <label for="bookAuthor">المؤلف</label>
+                <input class="form-control" id="bookAuthor" placeholder="اسم المؤلف (اختياري)">
+            </div>
+            <div class="form-row">
+                <label for="bookPages">عدد الصفحات</label>
+                <input class="form-control" type="number" id="bookPages" min="1" value="1">
+            </div>
+            <div class="form-row">
+                <label>التصنيف</label>
                 <div class="category-options" id="categoryOptions"></div>
+                <label for="customCategory" class="visually-hidden">تصنيف آخر</label>
                 <input class="form-control" id="customCategory" placeholder="أو اكتب تصنيف جديد">
             </div>
-            <div class="form-row"><label>نص الكتاب *</label>
+            <div class="form-row">
+                <label>نص الكتاب *</label>
                 <div id="contentPreview" style="margin-bottom:8px; font-size:0.9rem; color: #7a6248;"></div>
                 <button type="button" class="write-content-btn" id="openPagesEditorBtn"><i class="fas fa-pen-fancy"></i> كتابة النص (محرر الصفحات)</button>
                 <input type="hidden" id="bookContentHidden">
             </div>
-            <div class="form-row"><label>ملاحظات</label><textarea class="form-control" id="bookNotes" rows="2"></textarea></div>
-            <div class="form-row"><label>تقييم</label><div class="rating-stars" id="ratingStarsInput"></div></div>
-            <div class="form-row"><label>ملف صوتي (MP3)</label>
+            <div class="form-row">
+                <label for="bookNotes">ملاحظات</label>
+                <textarea class="form-control" id="bookNotes" rows="2"></textarea>
+            </div>
+            <div class="form-row">
+                <label>تقييم</label>
+                <div class="rating-stars" id="ratingStarsInput" role="radiogroup" aria-label="تقييم الكتاب"></div>
+            </div>
+            <div class="form-row">
+                <label for="audioFileInput">ملف صوتي (MP3)</label>
                 <div class="audio-file-row">
-                    <input type="file" id="audioFileInput" accept="audio/mp3" style="flex:1;">
-                    <button type="button" id="deleteAudioBtn" class="delete-audio-btn" title="حذف الملف الصوتي" style="display:none;"><i class="fas fa-trash-alt"></i></button>
+                    <input type="file" id="audioFileInput" accept="audio/mp3" style="flex:1;" aria-label="اختر ملف صوتي">
+                    <button type="button" id="deleteAudioBtn" class="delete-audio-btn" title="حذف الملف الصوتي" aria-label="حذف الملف الصوتي" style="display:none;"><i class="fas fa-trash-alt"></i></button>
                 </div>
-                <audio id="audioPreview" controls style="display:none; width:100%; margin-top:8px;"></audio>
+                <audio id="audioPreview" controls style="display:none; width:100%; margin-top:8px;" aria-label="معاينة الملف الصوتي"></audio>
             </div>
         </div>
         <div class="modal-footer">
@@ -392,6 +413,7 @@
             <div class="pages-container">
                 <div class="page-tabs" id="pageTabs"></div>
                 <div class="page-editor">
+                    <label for="currentPageEditor" class="visually-hidden">محرر الصفحة الحالية</label>
                     <textarea id="currentPageEditor" placeholder="اكتب محتوى الصفحة هنا..."></textarea>
                 </div>
                 <div class="page-navigation">
@@ -413,18 +435,18 @@
     <div class="reader-progress-bar" id="readingProgressBar"></div>
     <div class="reader-header">
         <button class="btn btn-secondary" id="backToLibraryBtn"><i class="fas fa-arrow-right"></i> العودة</button>
-        <h2 id="readingPageTitle"></h2>
+        <h2 id="readingPageTitle">الكتاب</h2> <!-- قيمة افتراضية لتجنب العنوان الفارغ -->
         <div class="reader-controls">
-            <button class="icon-btn" id="focusModeBtn"><i class="fas fa-eye"></i></button>
-            <button class="icon-btn" id="increaseFontBtn">A+</button>
-            <button class="icon-btn" id="decreaseFontBtn">A-</button>
-            <select id="fontFamilySelect">
+            <button class="icon-btn" id="focusModeBtn" aria-label="وضع التركيز"><i class="fas fa-eye"></i></button>
+            <button class="icon-btn" id="increaseFontBtn" aria-label="تكبير الخط">A+</button>
+            <button class="icon-btn" id="decreaseFontBtn" aria-label="تصغير الخط">A-</button>
+            <label for="fontFamilySelect" class="visually-hidden">نوع الخط</label>
+            <select id="fontFamilySelect" aria-label="نوع الخط">
                 <option value="Cairo">افتراضي</option>
                 <option value="'Traditional Arabic', serif">نسخ</option>
                 <option value="Arial, sans-serif">حديث</option>
             </select>
-            <!-- أزلنا زر الاقتباسات لأنه ليس له فائدة -->
-            <button class="icon-btn" id="similarBooksBtn"><i class="fas fa-book"></i></button>
+            <button class="icon-btn" id="similarBooksBtn" aria-label="كتب مشابهة"><i class="fas fa-book"></i></button>
         </div>
     </div>
     <div class="reader-content" id="readerContent">
@@ -446,7 +468,7 @@
 <div class="modal-overlay" id="confirmDeleteModal"><div class="modal-card" style="width:400px;"><div class="modal-header">تأكيد الحذف</div><div class="modal-body"><p id="deleteMessage"></p></div><div class="modal-footer"><button class="btn btn-secondary" id="cancelDeleteBtn">إلغاء</button><button class="btn" id="confirmDeleteBtn" style="background:#c0392b;">حذف</button></div></div></div>
 
 <!-- مودال إضافة تصنيف -->
-<div class="modal-overlay" id="addCategoryModal"><div class="modal-card" style="width:400px;"><div class="modal-header">إضافة تصنيف</div><div class="modal-body"><input class="form-control" id="newCategoryName" placeholder="اسم التصنيف"></div><div class="modal-footer"><button class="btn btn-secondary" id="cancelAddCategoryBtn">إلغاء</button><button class="btn" id="saveNewCategoryBtn">حفظ</button></div></div></div>
+<div class="modal-overlay" id="addCategoryModal"><div class="modal-card" style="width:400px;"><div class="modal-header">إضافة تصنيف</div><div class="modal-body"><label for="newCategoryName" class="visually-hidden">اسم التصنيف الجديد</label><input class="form-control" id="newCategoryName" placeholder="اسم التصنيف"></div><div class="modal-footer"><button class="btn btn-secondary" id="cancelAddCategoryBtn">إلغاء</button><button class="btn" id="saveNewCategoryBtn">حفظ</button></div></div></div>
 
 <script>
     (function(){
@@ -517,7 +539,7 @@
                     if (typeof b.content === 'string' && b.content.startsWith('[')) {
                         try { const arr = JSON.parse(b.content); pages = arr.length; } catch(e) {}
                     }
-                    totalMinutes += pages * 2; // افتراض دقيقتين للصفحة
+                    totalMinutes += pages * 2;
                 });
                 const readingHours = Math.floor(totalMinutes / 60);
                 return { totalBooks, uniqueAuthors: authorsSet.size, readBooks, readingHours };
@@ -646,6 +668,10 @@
                 const card = document.createElement('div');
                 card.className = `book-card ${book.progress>0 && book.progress<100 ? 'reading-highlight' : ''}`;
                 card.dataset.id = book.id;
+                // جعل البطاقة قابلة للوصول بلوحة المفاتيح
+                card.setAttribute('tabindex', '0');
+                card.setAttribute('role', 'button');
+                card.setAttribute('aria-label', `فتح كتاب ${book.title}`);
                 card.innerHTML = `
                     <div class="book-cover"><i class="fas fa-book"></i><span class="book-badge">${book.language||'عربي'}</span></div>
                     <div class="book-details">
@@ -656,21 +682,38 @@
                         <div class="book-meta">
                             <span><i class="fas fa-tag"></i> ${book.category}</span>
                             <div class="book-actions">
-                                <i class="fas fa-heart" data-action="fav" style="color:${book.isFavorite?'#e74c3c':''}"></i>
-                                ${lib.editMode ? '<i class="fas fa-edit" data-action="edit"></i>' : ''}
-                                <i class="fas fa-trash" data-action="delete"></i>
-                                <i class="fas fa-book-open" data-action="read"></i>
-                                <i class="fas fa-download" data-action="export"></i>
+                                <i class="fas fa-heart" data-action="fav" tabindex="0" role="button" aria-label="${book.isFavorite ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}" style="color:${book.isFavorite?'#e74c3c':''}"></i>
+                                ${lib.editMode ? '<i class="fas fa-edit" data-action="edit" tabindex="0" role="button" aria-label="تعديل الكتاب"></i>' : ''}
+                                <i class="fas fa-trash" data-action="delete" tabindex="0" role="button" aria-label="حذف الكتاب"></i>
+                                <i class="fas fa-book-open" data-action="read" tabindex="0" role="button" aria-label="قراءة الكتاب"></i>
+                                <i class="fas fa-download" data-action="export" tabindex="0" role="button" aria-label="تصدير الكتاب"></i>
                             </div>
                         </div>
                     </div>
                 `;
-                card.querySelector('[data-action="fav"]').onclick = e => { e.stopPropagation(); lib.update(book.id, {isFavorite: !book.isFavorite}); renderBooks(); };
-                if (lib.editMode) card.querySelector('[data-action="edit"]').onclick = e => { e.stopPropagation(); openEditModal(book); };
-                card.querySelector('[data-action="delete"]').onclick = e => { e.stopPropagation(); openDeleteModal(book.id); };
-                card.querySelector('[data-action="read"]').onclick = e => { e.stopPropagation(); openReader(book.id); };
-                card.querySelector('[data-action="export"]').onclick = e => { e.stopPropagation(); exportBook(book); };
-                card.onclick = () => openReader(book.id);
+                // أحداث الأزرار الداخلية
+                const favIcon = card.querySelector('[data-action="fav"]');
+                favIcon.addEventListener('click', e => { e.stopPropagation(); lib.update(book.id, {isFavorite: !book.isFavorite}); renderBooks(); });
+                favIcon.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); favIcon.click(); } });
+                if (lib.editMode) {
+                    const editIcon = card.querySelector('[data-action="edit"]');
+                    editIcon.addEventListener('click', e => { e.stopPropagation(); openEditModal(book); });
+                    editIcon.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); editIcon.click(); } });
+                }
+                const deleteIcon = card.querySelector('[data-action="delete"]');
+                deleteIcon.addEventListener('click', e => { e.stopPropagation(); openDeleteModal(book.id); });
+                deleteIcon.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); deleteIcon.click(); } });
+                const readIcon = card.querySelector('[data-action="read"]');
+                readIcon.addEventListener('click', e => { e.stopPropagation(); openReader(book.id); });
+                readIcon.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); readIcon.click(); } });
+                const exportIcon = card.querySelector('[data-action="export"]');
+                exportIcon.addEventListener('click', e => { e.stopPropagation(); exportBook(book); });
+                exportIcon.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); exportIcon.click(); } });
+
+                // حدث البطاقة نفسها
+                card.addEventListener('click', () => openReader(book.id));
+                card.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); openReader(book.id); } });
+
                 booksGrid.appendChild(card);
             });
         }
@@ -687,7 +730,7 @@
         function renderRecentBooks() {
             const recent = lib.getRecentBooks(3);
             recentBooksList.innerHTML = recent.map(b => 
-                `<div class="recent-item" onclick="document.getElementById('searchInput').value='${b.title}'; document.getElementById('searchInput').dispatchEvent(new Event('input'));">
+                `<div class="recent-item" tabindex="0" role="button" aria-label="${DOMPurify.sanitize(b.title)}" onclick="document.getElementById('searchInput').value='${b.title}'; document.getElementById('searchInput').dispatchEvent(new Event('input'));">
                     <span>${DOMPurify.sanitize(b.title)}</span>
                     <span>${b.author || ''}</span>
                 </div>`
@@ -713,9 +756,12 @@
                 audioPreview.style.display = 'none';
                 deleteAudioBtn.style.display = 'none';
             }
+            // تحميل المحتوى
             if (book.content) {
                 try { pagesContent = JSON.parse(book.content); } catch { pagesContent = [book.content]; }
             } else pagesContent = [''];
+            // تعيين قيمة حقل النص المخفي لتجنب خطأ "العنوان والنص مطلوبان"
+            bookContentHidden.value = JSON.stringify(pagesContent);
             totalPages = pagesContent.length;
             updateContentPreview();
             bookModal.classList.add('active');
@@ -727,7 +773,12 @@
                 const star = document.createElement('i');
                 star.className = i <= currentRating ? 'fas fa-star' : 'far fa-star';
                 star.dataset.rating = i;
+                star.setAttribute('tabindex', '0');
+                star.setAttribute('role', 'radio');
+                star.setAttribute('aria-checked', i <= currentRating);
+                star.setAttribute('aria-label', `${i} نجمة`);
                 star.onclick = () => { currentRating = i; updateRatingStars(); };
+                star.onkeydown = e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); star.click(); } };
                 ratingStarsDiv.appendChild(star);
             }
         }
@@ -758,7 +809,11 @@
                 const tab = document.createElement('span');
                 tab.className = `page-tab ${i===currentPageIndex?'active':''}`;
                 tab.textContent = `صفحة ${i+1}`;
+                tab.setAttribute('tabindex', '0');
+                tab.setAttribute('role', 'button');
+                tab.setAttribute('aria-label', `صفحة ${i+1}`);
                 tab.onclick = () => { saveCurrentPage(); currentPageIndex = i; loadPageEditor(i); renderPageTabs(); };
+                tab.onkeydown = e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); tab.click(); } };
                 pageTabs.appendChild(tab);
             }
             pageIndicator.textContent = `صفحة ${currentPageIndex+1} من ${totalPages}`;
@@ -775,7 +830,7 @@
             readingPageTitle.textContent = book.title;
             readingTitle.textContent = book.title;
             readingAuthor.innerHTML = `<i class="fas fa-user"></i> ${book.author || 'غير معروف'}`;
-            document.getElementById('audioPlayerContainer').innerHTML = book.audioFile ? `<audio controls src="${book.audioFile}"></audio>` : '';
+            document.getElementById('audioPlayerContainer').innerHTML = book.audioFile ? `<audio controls src="${book.audioFile}" aria-label="ملف صوتي للكتاب"></audio>` : '';
             try { readerPages = JSON.parse(book.content); } catch { readerPages = [book.content]; }
             readerCurrentPage = 0;
             displayReaderPage(0);
@@ -806,6 +861,7 @@
             editingId.value = ''; modalTitle.innerHTML = '<i class="fas fa-plus-circle"></i> إضافة كتاب';
             bookTitleInp.value = bookAuthorInp.value = bookNotesInp.value = ''; bookPagesInp.value = 1;
             currentRating=0; updateRatingStars(); pagesContent = ['']; totalPages=1; updateContentPreview();
+            bookContentHidden.value = ''; // فارغ للكتاب الجديد
             audioDataURL = null; audioPreview.style.display = 'none'; deleteAudioBtn.style.display = 'none';
             bookModal.classList.add('active');
         };
@@ -855,7 +911,6 @@
         focusModeBtn.onclick = () => document.body.classList.toggle('focus-mode');
         similarBooksBtn.onclick = () => { if (currentBookId) { const b = lib.books.find(b=>b.id==currentBookId); lib.searchTerm = b.author || b.category; closeReader(); renderBooks(); } };
         
-        // إزالة وظيفة الاقتباسات من الأفتار
         userAvatar.onclick = null;
         
         audioFileInput.onchange = e => {
